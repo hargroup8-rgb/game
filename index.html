@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gaming Portal - Finger Swipe Only</title>
+  <!-- Three.js CDN for Gaming 3D Effect -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <style>
+    /* ===================================================
+       COIN SYSTEM & ADMIN SEARCH STYLES
+    =================================================== */
+    .wallet-badge {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #ffffff;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 800;
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+    }
+
+    .user-id-tag {
+      color: #00f2fe;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .search-input-box {
+      width: 100%;
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(0, 242, 254, 0.4);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 12px;
+      margin-bottom: 10px;
+      outline: none;
+    }
+
+    .search-input-box:focus {
+      border-color: #ff0055;
+      box-shadow: 0 0 8px rgba(255, 0, 85, 0.4);
+    }
+
+    .btn-buy-coins {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #fff;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 10px;
+      font-weight: 800;
+      cursor: pointer;
+      text-transform: uppercase;
+    }
+
+    .approval-card {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      padding: 8px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .btn-approve {
+      background: #10b981;
+      color: #fff;
+      border: none;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .btn-reject {
+      background: #ef4444;
+      color: #fff;
+      border: none;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 800;
+      cursor: pointer;
+      margin-left: 4px;
+    }
+
+    /* ===================================================
+       ADMIN DASHBOARD STYLES
+    =================================================== */
+    .admin-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 0, 85, 0.2);
+      border-radius: 12px;
+      padding: 8px 5px;
+      text-align: center;
+    }
+
+    .stat-card h5 {
+      font-size: 9px;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-card p {
+      font-size: 16px;
+      font-weight: 800;
+      color: #00f2fe;
+      margin-top: 2px;
+    }
+
+    .user-list-container {
+      flex: 1;
+      overflow-y: auto;
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 14px;
+      padding: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .player-card {
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 10px;
+      padding: 10px;
+      margin-bottom: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .player-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 5px;
+    }
+
+    .player-name {
+      font-size: 13px;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .player-phone {
+      font-size: 10px;
+      color: #94a3b8;
+    }
+
+    .status-badge {
+      font-size: 9px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .status-online { background: rgba(16, 185, 129, 0.2); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.4); }
+    .status-playing { background: rgba(245, 158, 11, 0.2); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.4); }
+    .status-offline { background: rgba(100, 116, 139, 0.2); color: #94a3b8; border: 1px solid rgba(100, 116, 139, 0.4); }
+
+    .player-stats {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 6px;
+      padding-top: 6px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 11px;
+    }
+
+    .win-text {
+      color: #facc15 !important;
+      font-weight: 800;
+      text-shadow: 0 0 8px rgba(250, 204, 21, 0.4);
+    }
+
+    .loss-text {
+      color: #ef4444 !important;
+      font-weight: 800;
+      text-shadow: 0 0 8px rgba(239, 68, 68, 0.4);
+    }
+
+    /* Reset & Base Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Rajdhani', 'Segoe UI', Roboto, sans-serif;
+      user-select: none;
+    }
+
+    body {
+      background: #07090e;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 15px;
+      color: #ffffff;
+    }
+
+    /* Mobile Container Frame */
+    .mobile-frame {
+      width: 100%;
+      max-width: 390px;
+      height: 720px;
+      background: #0f131d;
+      border-radius: 36px;
+      box-shadow: 0 0 35px rgba(255, 0, 85, 0.25), 0 20px 50px rgba(0, 0, 0, 0.9);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+      border: 2px solid rgba(255, 0, 85, 0.3);
+    }
+
+    /* 3D Gaming Canvas Header */
+    .canvas-container {
+      width: 100%;
+      height: 180px;
+      position: relative;
+      background: radial-gradient(circle at center, #1b132b 0%, #080a11 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      padding-bottom: 10px;
+      flex-shrink: 0;
+    }
+
+    #webgl-canvas {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+
+    .header-text-container {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      background: rgba(15, 19, 29, 0.85);
+      padding: 8px 20px;
+      border-radius: 14px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 0, 85, 0.4);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7);
+    }
+
+    .header-text-container h2 {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: #ffffff;
+      text-transform: uppercase;
+      text-shadow: 0 0 10px rgba(255, 0, 85, 0.8);
+    }
+
+    .header-text-container p {
+      font-size: 10px;
+      color: #00f2fe;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .tab-container {
+      display: flex;
+      background: rgba(255, 255, 255, 0.04);
+      margin: 12px 20px 5px 20px;
+      border-radius: 12px;
+      padding: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 10px 0;
+      border: none;
+      background: transparent;
+      font-size: 13px;
+      font-weight: 700;
+      color: #64748b;
+      cursor: pointer;
+      border-radius: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, #ff0055, #7928ca);
+      color: #ffffff;
+      box-shadow: 0 4px 15px rgba(255, 0, 85, 0.4);
+    }
+
+    .content-body {
+      flex: 1;
+      padding: 12px 18px 20px 18px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-section {
+      display: none;
+      height: 100%;
+      animation: fadeIn 0.3s ease-in-out forwards;
+    }
+
+    .form-section.active {
+      display: flex;
+      flex-direction: column;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .input-group {
+      margin-bottom: 14px;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      color: #94a3b8;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 12px 14px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      font-size: 14px;
+      color: #ffffff;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .input-group input:focus {
+      border-color: #ff0055;
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 12px rgba(255, 0, 85, 0.3);
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 13px;
+      background: linear-gradient(135deg, #ff0055 0%, #7928ca 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      margin-top: 5px;
+      box-shadow: 0 6px 20px rgba(255, 0, 85, 0.4);
+      transition: all 0.3s ease;
+    }
+
+    .btn-submit:hover {
+      box-shadow: 0 8px 25px rgba(255, 0, 85, 0.6);
+      transform: translateY(-1px);
+    }
+
+    .alert-msg {
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      margin-bottom: 12px;
+      display: none;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .alert-danger {
+      background: rgba(239, 68, 68, 0.2);
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+    }
+
+    .alert-success {
+      background: rgba(16, 185, 129, 0.2);
+      color: #6ee7b7;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+
+    .switch-link {
+      text-align: center;
+      margin-top: 14px;
+      font-size: 12px;
+      color: #64748b;
+    }
+
+    .switch-link span {
+      color: #00f2fe;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .user-profile-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 8px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      margin-bottom: 10px;
+    }
+
+    .user-info h4 {
+      font-size: 14px;
+      color: #ffffff;
+      font-weight: 800;
+    }
+
+    .user-info p {
+      font-size: 10px;
+      color: #00f2fe;
+    }
+
+    .btn-small-logout {
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      padding: 5px 10px;
+      border-radius: 8px;
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: all 0.3s ease;
+    }
+
+    .swipe-instruction {
+      text-align: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: #00f2fe;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .carousel-container {
+      width: 100%;
+      flex: 1;
+      overflow: hidden;
+      position: relative;
+      border-radius: 20px;
+      touch-action: pan-y;
+      cursor: grab;
+    }
+
+    .carousel-container:active {
+      cursor: grabbing;
+    }
+
+    .carousel-track {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .game-slide {
+      flex: 0 0 100%;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(15, 19, 29, 0.95) 100%);
+      border: 1.5px solid rgba(255, 0, 85, 0.35);
+      border-radius: 20px;
+      padding: 18px 15px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+
+    .slide-badge {
+      position: absolute;
+      top: 12px;
+      right: 14px;
+      background: linear-gradient(135deg, #ff0055, #7928ca);
+      color: #ffffff;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 10px rgba(255, 0, 85, 0.3);
+    }
+
+    .large-game-icon {
+      width: 105px;
+      height: 105px;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 56px;
+      margin-top: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    }
+
+    .carrom-bg { background: linear-gradient(135deg, #ff0055, #ff5e00); }
+    .snooker-bg { background: linear-gradient(135deg, #059669, #10b981); }
+    .ludo-bg { background: linear-gradient(135deg, #0284c7, #38bdf8); }
+
+    .slide-game-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: #ffffff;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 10px;
+    }
+
+    .slide-game-desc {
+      font-size: 12px;
+      color: #94a3b8;
+      text-align: center;
+      margin-top: 4px;
+      padding: 0 10px;
+    }
+
+    .btn-play-large {
+      width: 100%;
+      padding: 13px;
+      background: linear-gradient(135deg, #00f2fe, #4facfe);
+      color: #05050a;
+      border: none;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(0, 242, 254, 0.4);
+      transition: all 0.3s ease;
+      margin-top: 10px;
+    }
+
+    .btn-play-large:hover {
+      transform: scale(1.02);
+      box-shadow: 0 8px 25px rgba(0, 242, 254, 0.6);
+    }
+
+    .carousel-dots-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 12px;
+    }
+
+    .carousel-dots {
+      display: flex;
+      gap: 10px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .dot.active {
+      width: 28px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #00f2fe, #4facfe);
+      box-shadow: 0 0 12px rgba(0, 242, 254, 0.6);
+    }
+
+    .arena-container {
+      text-align: center;
+      padding-top: 20px;
+    }
+
+    .btn-back {
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: none;
+      margin-top: 20px;
+    }
+  
+  /* ===================================================
+       ADMIN FULLSCREEN OVERRIDE (LAPTOPS/DESKTOPS ONLY)
+    =================================================== */
+    @media (min-width: 768px) {
+      body.admin-mode {
+        padding: 0;
+        background: #0f131d;
+      }
+      
+      body.admin-mode .mobile-frame {
+        max-width: 100%;
+        width: 100%;
+        height: 100vh;
+        border-radius: 0;
+        border: none;
+        box-shadow: none;
+      }
+
+      /* Adjust internal spacing for larger screens */
+      body.admin-mode .admin-stats-grid {
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+      
+      body.admin-mode .stat-card {
+        padding: 20px;
+      }
+      
+      body.admin-mode .stat-card h5 {
+        font-size: 14px;
+      }
+      
+      body.admin-mode .stat-card p {
+        font-size: 24px;
+      }
+
+      body.admin-mode .search-input-box {
+        font-size: 16px;
+        padding: 12px 18px;
+        margin-bottom: 20px;
+      }
+    }
+  
+  
+  </style>
+</head>
+<body>
+
+  <div class="mobile-frame">
+    <!-- Top 3D Header -->
+    <div class="canvas-container">
+      <canvas id="webgl-canvas"></canvas>
+      
+      <div class="header-text-container">
+        <h2 id="header-title">GAMING PORTAL</h2>
+        <p id="header-subtitle">Sign In To Play</p>
+      </div>
+    </div>
+
+    <!-- Auth Tab Switcher -->
+    <div class="tab-container" id="tab-container">
+      <button class="tab-btn active" id="tab-login" onclick="switchTab('login')">Login</button>
+      <button class="tab-btn" id="tab-register" onclick="switchTab('register')">Register</button>
+    </div>
+
+    <!-- Main Body Area -->
+    <div class="content-body">
+      
+      <!-- Alert Box -->
+      <div id="alert-box" class="alert-msg"></div>
+
+      <!-- 1. LOGIN FORM -->
+      <div id="login-section" class="form-section active">
+        <form onsubmit="handleLogin(event)">
+          <div class="input-group">
+            <label for="login-username">Username or Mobile Number</label>
+            <input type="text" id="login-username" placeholder="e.g. admin or 03001234567" required>
+          </div>
+
+          <div class="input-group">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" placeholder="Enter password" required>
+          </div>
+
+          <button type="submit" class="btn-submit">LOG IN</button>
+        </form>
+
+        <div class="switch-link">
+          Need a game account? <span onclick="switchTab('register')">Register Now</span>
+        </div>
+      </div>
+
+      <!-- 2. REGISTRATION FORM -->
+      <div id="register-section" class="form-section">
+        <form onsubmit="handleRegister(event)">
+          <div class="input-group">
+            <label for="reg-name">Gamer / Full Name</label>
+            <input type="text" id="reg-name" placeholder="e.g. Alex Hunter" required>
+          </div>
+
+          <div class="input-group">
+            <label for="reg-phone">EasyPaisa / JazzCash Mobile Number</label>
+            <input type="tel" id="reg-phone" placeholder="e.g. 03001234567" pattern="[0-9]{11}" title="Enter an 11-digit mobile number" required>
+          </div>
+
+          <div class="input-group">
+            <label for="reg-password">Choose Password</label>
+            <input type="password" id="reg-password" placeholder="Create strong password" required>
+          </div>
+
+          <button type="submit" class="btn-submit">CREATE ACCOUNT</button>
+        </form>
+
+        <div class="switch-link">
+          Already a member? <span onclick="switchTab('login')">Login Here</span>
+        </div>
+      </div>
+
+      <!-- 3. HOME SECTION (USER VIEW) -->
+      <div id="home-section" class="form-section">
+        
+        <!-- User Profile Bar with ID & Coins -->
+        <div class="user-profile-bar">
+          <div class="user-info">
+            <h4 id="user-display-name">Gamer</h4>
+            <p id="user-display-id" class="user-id-tag">ID: 0000</p>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="wallet-badge" id="user-display-coins">🪙 0 Coins</span>
+            <button class="btn-buy-coins" onclick="showBuyCoinsModal()">+ Buy</button>
+            <button class="btn-small-logout" onclick="handleLogout()">Exit</button>
+          </div>
+        </div>
+
+        <div class="swipe-instruction">
+          <span>&larr;</span> Swipe Finger Left / Right <span>&rarr;</span>
+        </div>
+
+        <!-- Carousel Outer Viewport -->
+        <div class="carousel-container" id="carouselContainer">
+          <div class="carousel-track" id="carouselTrack">
+            
+            <!-- SLIDE 1: CARROM -->
+            <div class="game-slide">
+              <span class="slide-badge">Max Bet: 300 Coins</span>
+              <div class="large-game-icon carrom-bg">🎯</div>
+              <div>
+                <h3 class="slide-game-title">Carrom Board</h3>
+                <p class="slide-game-desc">Entry: 300 Coins | Winner Gets: 500 Coins</p>
+              </div>
+              <button class="btn-play-large" onclick="openGame('Carrom Board', '🎯', 'carrom-bg')">PLAY CARROM (300 COINS)</button>
+            </div>
+
+            <!-- SLIDE 2: SNOOKER -->
+            <div class="game-slide">
+              <span class="slide-badge">Max Bet: 300 Coins</span>
+              <div class="large-game-icon snooker-bg">🎱</div>
+              <div>
+                <h3 class="slide-game-title">Snooker</h3>
+                <p class="slide-game-desc">Entry: 300 Coins | Winner Gets: 500 Coins</p>
+              </div>
+              <button class="btn-play-large" onclick="openGame('Snooker', '🎱', 'snooker-bg')">PLAY SNOOKER (300 COINS)</button>
+            </div>
+
+            <!-- SLIDE 3: LUDO -->
+            <div class="game-slide">
+              <span class="slide-badge">Max Bet: 300 Coins</span>
+              <div class="large-game-icon ludo-bg">🎲</div>
+              <div>
+                <h3 class="slide-game-title">Ludo</h3>
+                <p class="slide-game-desc">Entry: 300 Coins | Winner Gets: 500 Coins</p>
+              </div>
+              <button class="btn-play-large" onclick="openGame('Ludo', '🎲', 'ludo-bg')">PLAY LUDO (300 COINS)</button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Indicator Dots -->
+        <div class="carousel-dots-wrapper">
+          <div class="carousel-dots" id="dotsContainer">
+            <div class="dot active" onclick="goToSlide(0)"></div>
+            <div class="dot" onclick="goToSlide(1)"></div>
+            <div class="dot" onclick="goToSlide(2)"></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 4. ADMIN CONTROL PANEL SECTION -->
+      <div id="admin-section" class="form-section">
+        <div class="user-profile-bar">
+          <div class="user-info">
+            <h4 style="color: #ff0055;">ADMIN PANEL</h4>
+            <p>ID Search & Approval Control</p>
+          </div>
+          <button class="btn-small-logout" onclick="handleLogout()">Exit</button>
+        </div>
+
+        <!-- Admin Cards Summary -->
+        <div class="admin-stats-grid">
+          <div class="stat-card">
+            <h5>Total Users</h5>
+            <p id="stat-total-users">0</p>
+          </div>
+          <div class="stat-card">
+            <h5>Company Cut</h5>
+            <p id="stat-company-cut" style="color: #facc15;">100/match</p>
+          </div>
+          <div class="stat-card">
+            <h5>Total Profit</h5>
+            <p id="stat-company-profit" style="color: #10b981;">0</p>
+          </div>
+        </div>
+
+        <!-- Search Bar -->
+        <input type="text" id="search-player-id" class="search-input-box" placeholder="🔍 Search Player by User ID (e.g. 1001)..." onkeyup="filterPlayersById()">
+
+        <!-- Pending Coin Approvals -->
+        <div style="font-size: 10px; color: #f59e0b; font-weight: 800; margin-bottom: 4px; text-transform: uppercase;">
+          ⚠️ Pending Coin Payment Requests
+        </div>
+        <div id="pending-requests-list" style="margin-bottom: 10px;"></div>
+
+        <!-- Registered Players Data -->
+        <div style="font-size: 10px; color: #00f2fe; font-weight: 800; margin-bottom: 4px; text-transform: uppercase;">
+          Registered Players Record
+        </div>
+        <div class="user-list-container" id="admin-players-list"></div>
+      </div>
+
+      <!-- 5. GAME ARENA ROOM SECTION (WAS MISSING) -->
+      <div id="arena-section" class="form-section">
+        <div class="arena-container">
+          <div id="arena-icon-box" class="large-game-icon" style="margin: 0 auto 15px auto;"></div>
+          <h3 id="arena-game-name" style="font-size: 24px; color: #ffffff; font-weight: 800;"></h3>
+          <p style="color: #00f2fe; margin-top: 6px; font-weight: 700; font-size: 13px;">SEARCHING FOR OPPONENT...</p>
+          
+          <div style="margin-top: 25px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+            <p style="color: #94a3b8; font-size: 12px;">Match Pool: 600 Coins | Entry: 300 Coins. Winner receives 500 Coins!</p>
+          </div>
+
+          <button class="btn-submit btn-back" onclick="backToHome()">BACK TO LOBBY</button>
+        </div>
+      </div>
+
+    </div> <!-- Close .content-body -->
+  </div> <!-- Close .mobile-frame -->
+
+  <script>
+    /* ===================================================
+       1. THREE.JS 3D GAMING CRYSTAL ANIMATION
+    =================================================== */
+    const canvas = document.getElementById('webgl-canvas');
+    const scene = new THREE.Scene();
+    
+    const camera = new THREE.PerspectiveCamera(45, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+    camera.position.z = 4.2;
+
+    const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+    renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+
+    const gamingGroup = new THREE.Group();
+    scene.add(gamingGroup);
+
+    const gemGeometry = new THREE.OctahedronGeometry(0.85, 0);
+    const gemMaterial = new THREE.MeshPhongMaterial({
+      color: 0xff0055,
+      emissive: 0x3a0018,
+      specular: 0x00f2fe,
+      shininess: 100,
+      flatShading: true
+    });
+    const crystalGem = new THREE.Mesh(gemGeometry, gemMaterial);
+    gamingGroup.add(crystalGem);
+
+    const ringGeometry = new THREE.TorusGeometry(1.3, 0.03, 16, 100);
+    const ringMaterial = new THREE.MeshBasicMaterial({ color: 0x00f2fe, wireframe: true });
+    const energyRing = new THREE.Mesh(ringGeometry, ringMaterial);
+    energyRing.rotation.x = Math.PI / 3;
+    gamingGroup.add(energyRing);
+
+    const light1 = new THREE.PointLight(0xff0055, 2.5, 50);
+    light1.position.set(2, 3, 4);
+    scene.add(light1);
+
+    const light2 = new THREE.PointLight(0x00f2fe, 2, 50);
+    light2.position.set(-2, -3, -2);
+    scene.add(light2);
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.3));
+
+    let clock = new THREE.Clock();
+    function animate() {
+      requestAnimationFrame(animate);
+      const elapsedTime = clock.getElapsedTime();
+
+      crystalGem.rotation.y = elapsedTime * 0.8;
+      crystalGem.position.y = Math.sin(elapsedTime * 2) * 0.1;
+
+      energyRing.rotation.z = elapsedTime * -1.2;
+      energyRing.rotation.y = elapsedTime * 0.5;
+
+      gamingGroup.rotation.y = Math.sin(elapsedTime * 0.5) * 0.2;
+
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    /* ===================================================
+       2. FINGER SWIPE CAROUSEL LOGIC
+    =================================================== */
+    let currentSlide = 0;
+    const totalSlides = 3;
+    const track = document.getElementById('carouselTrack');
+    const container = document.getElementById('carouselContainer');
+    const dots = document.querySelectorAll('.dot');
+
+    function updateCarousel() {
+      if (track) track.style.transform = `translateX(-${currentSlide * 100}%)`;
+      dots.forEach((dot, index) => {
+        if (index === currentSlide) {
+          dot.classList.add('active');
+        } else {
+          dot.classList.remove('active');
+        }
+      });
+    }
+
+    function goToSlide(index) {
+      currentSlide = index;
+      updateCarousel();
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides - 1) {
+        currentSlide++;
+      } else {
+        currentSlide = 0;
+      }
+      updateCarousel();
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+      } else {
+        currentSlide = totalSlides - 1;
+      }
+      updateCarousel();
+    }
+
+    let startX = 0;
+    let isDragging = false;
+
+    if (container) {
+      container.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+        isDragging = true;
+      }, { passive: true });
+
+      container.addEventListener('touchend', (e) => {
+        if (!isDragging) return;
+        const endX = e.changedTouches[0].clientX;
+        handleSwipe(startX, endX);
+        isDragging = false;
+      }, { passive: true });
+
+      container.addEventListener('mousedown', (e) => {
+        startX = e.clientX;
+        isDragging = true;
+      });
+
+      container.addEventListener('mouseup', (e) => {
+        if (!isDragging) return;
+        const endX = e.clientX;
+        handleSwipe(startX, endX);
+        isDragging = false;
+      });
+    }
+
+    function handleSwipe(start, end) {
+      const diff = start - end;
+      if (Math.abs(diff) > 35) {
+        if (diff > 0) {
+          nextSlide();
+        } else {
+          prevSlide();
+        }
+      }
+    }
+
+    /* ===================================================
+       3. COMPLETE GAME SYSTEM LOGIC WITH ADMIN APPROVAL
+    =================================================== */
+    let companyProfit = 0;
+
+    let defaultUsers = [
+      { id: 1000, name: "System Admin", phone: "admin", password: "admin", role: "admin", status: "Online", coins: 0, wins: 0, losses: 0 },
+      { id: 1001, name: "Ali Raza", phone: "03001234567", password: "123", role: "player", status: "Online", coins: 300, wins: 5, losses: 2 },
+      { id: 1002, name: "Hamza Khan", phone: "03129876543", password: "123", role: "player", status: "Offline", coins: 0, wins: 2, losses: 4 }
+    ];
+
+    let pendingRequests = [
+      { reqId: 1, userId: 1002, userName: "Hamza Khan", coinsRequested: 300, price: 300 }
+    ];
+
+    let usersList = [];
+    let currentUser = null;
+
+    window.onload = function() {
+      const savedUsers = localStorage.getItem('game_app_users_v7');
+      const savedRequests = localStorage.getItem('game_app_requests_v7');
+      const savedProfit = localStorage.getItem('game_company_profit');
+
+      if (savedUsers) usersList = JSON.parse(savedUsers);
+      else { usersList = defaultUsers; localStorage.setItem('game_app_users_v7', JSON.stringify(usersList)); }
+
+      if (savedRequests) pendingRequests = JSON.parse(savedRequests);
+      if (savedProfit) companyProfit = parseInt(savedProfit);
+    };
+
+    function saveState() {
+      localStorage.setItem('game_app_users_v7', JSON.stringify(usersList));
+      localStorage.setItem('game_app_requests_v7', JSON.stringify(pendingRequests));
+      localStorage.setItem('game_company_profit', companyProfit.toString());
+    }
+
+    function generateUniqueId() {
+      return Math.floor(1000 + Math.random() * 9000);
+    }
+
+    function showAlert(message, type) {
+      const alertBox = document.getElementById('alert-box');
+      alertBox.textContent = message;
+      alertBox.className = `alert-msg ${type === 'error' ? 'alert-danger' : 'alert-success'}`;
+      alertBox.style.display = 'block';
+
+      setTimeout(() => {
+        alertBox.style.display = 'none';
+      }, 4000);
+    }
+
+    function switchTab(tab) {
+      document.getElementById('alert-box').style.display = 'none';
+      
+      const loginSection = document.getElementById('login-section');
+      const registerSection = document.getElementById('register-section');
+      const tabLogin = document.getElementById('tab-login');
+      const tabRegister = document.getElementById('tab-register');
+
+      if (tab === 'login') {
+        loginSection.classList.add('active');
+        registerSection.classList.remove('active');
+        tabLogin.classList.add('active');
+        tabRegister.classList.remove('active');
+      } else if (tab === 'register') {
+        registerSection.classList.add('active');
+        loginSection.classList.remove('active');
+        tabRegister.classList.add('active');
+        tabLogin.classList.remove('active');
+      }
+    }
+
+    function handleRegister(event) {
+      event.preventDefault();
+
+      const name = document.getElementById('reg-name').value.trim();
+      const phone = document.getElementById('reg-phone').value.trim();
+      const password = document.getElementById('reg-password').value.trim();
+
+      if (usersList.find(u => u.phone === phone)) {
+        showAlert('This Mobile Number is already registered!', 'error');
+        return;
+      }
+
+      const newUser = {
+        id: generateUniqueId(),
+        name: name,
+        phone: phone,
+        password: password,
+        role: "player",
+        status: "Online",
+        coins: 0,
+        wins: 0,
+        losses: 0
+      };
+
+      usersList.push(newUser);
+      saveState();
+
+      showAlert(`Registered! Your User ID is ${newUser.id}`, 'success');
+      event.target.reset();
+
+      setTimeout(() => loginUserSession(newUser), 1200);
+    }
+
+    function handleLogin(event) {
+      event.preventDefault();
+
+      const usernameInput = document.getElementById('login-username').value.trim();
+      const passwordInput = document.getElementById('login-password').value.trim();
+
+      const userFound = usersList.find(
+        u => (u.phone === usernameInput || u.id.toString() === usernameInput) && u.password === passwordInput
+      );
+
+      if (userFound) {
+        loginUserSession(userFound);
+      } else {
+        showAlert('Invalid ID/Mobile or Password!', 'error');
+      }
+    }
+
+    function loginUserSession(user) {
+      currentUser = user;
+
+      if (user.phone !== 'admin') {
+        user.status = 'Online';
+        saveState();
+      }
+
+      if (user.phone === 'admin' || user.role === 'admin') {
+        showAdminPanel();
+      } else {
+        showHomeScreen(user);
+      }
+    }
+
+    function showBuyCoinsModal() {
+      if (!currentUser) return;
+
+      const hasPending = pendingRequests.find(r => r.userId === currentUser.id);
+      if (hasPending) {
+        showAlert('Aap ki pehli request Admin approval ke liye pending hai!', 'error');
+        return;
+      }
+
+      const confirmBuy = confirm("300 Coins khareednay ke liye Admin ko RS 300 ki Request bhejen?");
+      if (confirmBuy) {
+        pendingRequests.push({
+          reqId: Date.now(),
+          userId: currentUser.id,
+          userName: currentUser.name,
+          coinsRequested: 300,
+          price: 300
+        });
+        saveState();
+        showAlert('Payment Request Admin ko bhej di gayi hai! Approval ka intazar karein.', 'success');
+      }
+    }
+
+    function openGame(gameName, icon, iconClass) {
+      if (!currentUser) return;
+
+      if (currentUser.coins < 300) {
+        showAlert('Aap ke paas minimum 300 Approved Coins hone chahiye! Coins Buy karein aur Admin Approval ka wait karein.', 'error');
+        return;
+      }
+
+      currentUser.coins -= 300;
+      currentUser.status = 'Playing';
+      saveState();
+
+      document.getElementById('home-section').classList.remove('active');
+      document.getElementById('header-title').textContent = gameName;
+      document.getElementById('header-subtitle').textContent = 'Matchmaking Arena';
+
+      const arenaIconBox = document.getElementById('arena-icon-box');
+      arenaIconBox.textContent = icon;
+      arenaIconBox.className = `large-game-icon ${iconClass}`;
+
+      document.getElementById('arena-game-name').textContent = gameName;
+      document.getElementById('arena-section').classList.add('active');
+
+      setTimeout(() => {
+        simulateMatchOutcome();
+      }, 5000);
+    }
+
+    function simulateMatchOutcome() {
+      if (!currentUser) return;
+      currentUser.coins += 500;
+      currentUser.wins += 1;
+      companyProfit += 100;
+      saveState();
+      
+      showAlert('Match Over! Aap jeet gaye: +500 Coins added! (100 Company Cut Deducted)', 'success');
+      const walletCoins = document.getElementById('user-display-coins');
+      if (walletCoins) walletCoins.textContent = `🪙 ${currentUser.coins} Coins`;
+    }
+
+    function showAdminPanel() {
+      // Add Admin Fullscreen mode
+      document.body.classList.add('admin-mode');
+      
+      // Update the 3D canvas to prevent stretching
+      setTimeout(resize3DCanvas, 50);
+
+      document.getElementById('tab-container').style.display = 'none';
+      document.getElementById('login-section').classList.remove('active');
+      document.getElementById('register-section').classList.remove('active');
+      document.getElementById('home-section').classList.remove('active');
+      document.getElementById('arena-section').classList.remove('active');
+
+      document.getElementById('header-title').textContent = 'ADMIN CONTROL';
+      document.getElementById('header-subtitle').textContent = 'Approvals & Player ID Search';
+
+      renderAdminDashboard();
+      document.getElementById('admin-section').classList.add('active');
+    }
+
+    function renderAdminDashboard(filterId = '') {
+      const playersContainer = document.getElementById('admin-players-list');
+      const pendingContainer = document.getElementById('pending-requests-list');
+
+      playersContainer.innerHTML = '';
+      pendingContainer.innerHTML = '';
+
+      const players = usersList.filter(u => u.phone !== 'admin');
+
+      document.getElementById('stat-total-users').textContent = players.length;
+      document.getElementById('stat-company-profit').textContent = `🪙 ${companyProfit}`;
+
+      if (pendingRequests.length === 0) {
+        pendingContainer.innerHTML = '<div style="font-size:11px; color:#94a3b8; padding:5px;">Koi Pending Request nahi hai.</div>';
+      } else {
+        pendingRequests.forEach(req => {
+          const div = document.createElement('div');
+          div.className = 'approval-card';
+          div.innerHTML = `
+            <div>
+              <strong style="color:#fff; font-size:12px;">${req.userName} (ID: ${req.userId})</strong>
+              <div style="font-size:10px; color:#f59e0b;">Requested: ${req.coinsRequested} Coins (RS ${req.price})</div>
+            </div>
+            <div>
+              <button class="btn-approve" onclick="approveCoinRequest(${req.reqId})">Approve</button>
+              <button class="btn-reject" onclick="rejectCoinRequest(${req.reqId})">Reject</button>
+            </div>
+          `;
+          pendingContainer.appendChild(div);
+        });
+      }
+
+      let filteredPlayers = players;
+      if (filterId.trim() !== '') {
+        filteredPlayers = players.filter(p => p.id.toString().includes(filterId.trim()));
+      }
+
+      if (filteredPlayers.length === 0) {
+        playersContainer.innerHTML = '<p style="text-align:center; font-size:11px; color:#94a3b8; padding:10px;">Player nahi mila.</p>';
+        return;
+      }
+
+      filteredPlayers.forEach(p => {
+        let statusClass = 'status-offline';
+        if (p.status === 'Online') statusClass = 'status-online';
+        if (p.status === 'Playing') statusClass = 'status-playing';
+
+        const card = document.createElement('div');
+        card.className = 'player-card';
+        card.innerHTML = `
+          <div class="player-card-header">
+            <div>
+              <div class="player-name">${p.name} <span style="color:#00f2fe; font-size:10px;">[ID: ${p.id}]</span></div>
+              <div class="player-phone">${p.phone} | Wallet: <strong style="color:#f59e0b;">🪙 ${p.coins} Coins</strong></div>
+            </div>
+            <span class="status-badge ${statusClass}">${p.status || 'Offline'}</span>
+          </div>
+          <div class="player-stats">
+            <div>WINNER: <span class="win-text">${p.wins || 0} Wins (+500/win)</span></div>
+            <div>LOSER: <span class="loss-text">${p.losses || 0} Losses (-300)</span></div>
+          </div>
+        `;
+        playersContainer.appendChild(card);
+      });
+    }
+
+    function approveCoinRequest(reqId) {
+      const index = pendingRequests.findIndex(r => r.reqId === reqId);
+      if (index !== -1) {
+        const req = pendingRequests[index];
+        const user = usersList.find(u => u.id === req.userId);
+        if (user) {
+          user.coins += req.coinsRequested;
+          showAlert(`Approved! ${req.coinsRequested} Coins added to ${user.name}`, 'success');
+        }
+        pendingRequests.splice(index, 1);
+        saveState();
+        renderAdminDashboard();
+      }
+    }
+
+    function rejectCoinRequest(reqId) {
+      const index = pendingRequests.findIndex(r => r.reqId === reqId);
+      if (index !== -1) {
+        pendingRequests.splice(index, 1);
+        saveState();
+        renderAdminDashboard();
+        showAlert('Payment Request Reject kar di gayi hai.', 'error');
+      }
+    }
+
+    function filterPlayersById() {
+      const inputVal = document.getElementById('search-player-id').value;
+      renderAdminDashboard(inputVal);
+    }
+
+    function showHomeScreen(user) {
+      document.getElementById('tab-container').style.display = 'none';
+      document.getElementById('login-section').classList.remove('active');
+      document.getElementById('register-section').classList.remove('active');
+      document.getElementById('arena-section').classList.remove('active');
+      document.getElementById('admin-section').classList.remove('active');
+
+      document.getElementById('header-title').textContent = 'GAME LOBBY';
+      document.getElementById('header-subtitle').textContent = 'Swipe Left/Right To Change Game';
+
+      document.getElementById('user-display-name').textContent = user.name;
+      document.getElementById('user-display-id').textContent = `ID: ${user.id}`;
+      document.getElementById('user-display-coins').textContent = `🪙 ${user.coins} Coins`;
+
+      goToSlide(0);
+      document.getElementById('home-section').classList.add('active');
+    }
+
+    function backToHome() {
+      document.getElementById('arena-section').classList.remove('active');
+      document.getElementById('header-title').textContent = 'GAME LOBBY';
+      document.getElementById('header-subtitle').textContent = 'Swipe Left/Right To Change Game';
+
+      if (currentUser && currentUser.phone !== 'admin') {
+        currentUser.status = 'Online';
+        saveState();
+      }
+
+      showHomeScreen(currentUser);
+    }
+
+    function handleLogout() {
+      if (currentUser && currentUser.phone !== 'admin') {
+        currentUser.status = 'Offline';
+        saveState();
+      }
+      currentUser = null;
+
+      // Remove Admin Fullscreen mode
+      document.body.classList.remove('admin-mode');
+      
+      // Update the 3D canvas to return to mobile size
+      setTimeout(resize3DCanvas, 50);
+
+      document.getElementById('home-section').classList.remove('active');
+      document.getElementById('arena-section').classList.remove('active');
+      document.getElementById('admin-section').classList.remove('active');
+      document.getElementById('tab-container').style.display = 'flex';
+
+      document.getElementById('header-title').textContent = 'GAMING PORTAL';
+      document.getElementById('header-subtitle').textContent = 'Sign In To Play';
+
+      switchTab('login');
+      showAlert('Logged out successfully.', 'success');
+    }
+
+// Helper function to resize the 3D Header properly
+    function resize3DCanvas() {
+      const canvasContainer = document.querySelector('.canvas-container');
+      if (camera && renderer && canvasContainer) {
+        camera.aspect = canvasContainer.clientWidth / canvasContainer.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(canvasContainer.clientWidth, canvasContainer.clientHeight);
+      }
+    }
+
+    // Optional: Also attach it to window resize so it fixes itself if the user resizes their browser window
+    window.addEventListener('resize', resize3DCanvas);
+
+
+  </script>
+</body>
+</html>
