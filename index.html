@@ -9,6 +9,231 @@
   <style>
 
 
+/* ===================================================
+   SCREENSHOT MATCHING GAMEPLAY THEME (CSS)
+=================================================== */
+/* CSS mein is code se replace karein */
+.exact-screenshot-layout {
+  background: radial-gradient(circle, #008a4e 0%, #004d2b 100%) !important;
+  display: none; /* Game pehle se hide rahegi */
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 10px !important;
+  height: 100vh;
+}
+
+/* Jab game active ho sirf tabhi display kare */
+.exact-screenshot-layout.active {
+  display: flex !important;
+}
+
+/* Top Status Controls */
+.top-status-bar {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 10px;
+}
+.game-badge-carrom {
+  background: rgba(0, 0, 0, 0.4);
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 11px;
+  color: #fff;
+  font-weight: bold;
+}
+.top-controls {
+  display: flex;
+  gap: 8px;
+}
+.icon-btn-ctrl {
+  background: rgba(0, 0, 0, 0.4);
+  border: none;
+  color: #fff;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+/* Player Score Header */
+.players-score-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  width: 100%;
+  padding: 0 10px;
+}
+.player-profile-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 30%;
+  position: relative;
+}
+.profile-label {
+  font-size: 11px;
+  font-weight: 900;
+  color: #ffffff;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+.profile-avatar-frame {
+  width: 54px;
+  height: 54px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+}
+.red-frame {
+  background: #ff0f37;
+  border: 3px solid #ffd700; /* Gold frame */
+}
+.blue-frame {
+  background: #004cff;
+  border: 3px solid #111111; /* Dark frame */
+}
+.avatar-silhouette {
+  font-size: 32px;
+  opacity: 0.35;
+}
+
+/* Points badges under Avatar */
+.points-badge-row {
+  display: flex;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 15px;
+  padding: 2px 10px;
+  gap: 6px;
+  margin-top: 6px;
+}
+.coin-icon {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+.white-dot {
+  background: #ffffff;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.5);
+}
+.black-dot {
+  background: #222222;
+  border: 1px solid #444;
+}
+.points-text-num {
+  font-size: 15px;
+  font-weight: 900;
+  color: #fff;
+}
+
+/* Bet pot display */
+.center-pot-block {
+  display: flex;
+  justify-content: center;
+  width: 40%;
+  padding-bottom: 5px;
+}
+.gold-coins-bet-stack {
+  background: rgba(0, 0, 0, 0.4);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 18px;
+  font-weight: 900;
+  color: #fff;
+  border: 1.5px solid rgba(255,255,255,0.1);
+}
+
+/* Pause Button layout matching screenshot */
+.top-right-pause-holder {
+  position: absolute;
+  top: -45px;
+  right: -5px;
+}
+.pause-bars-btn {
+  background: #f59e0b;
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+}
+
+/* Rounded Canvas board frame */
+.board-outer-container {
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 20px 45px rgba(0,0,0,0.65);
+  border: 8px solid #3c1e0e; /* Dark chocolate wooden border */
+}
+
+/* Pill green slider track design */
+.wooden-slider-track {
+  position: relative;
+  width: 300px;
+  height: 38px;
+  background: linear-gradient(180deg, #187154 0%, #0d4432 100%);
+  border: 3px solid #d4a373; /* Golden light wood track border */
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  box-shadow: inset 0 4px 8px rgba(0,0,0,0.6), 0 4px 10px rgba(0,0,0,0.5);
+}
+.wooden-slider-track input[type="range"] {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 10;
+}
+.maroon-gold-star-handle {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #5c0d12; /* Dark Maroon Striker color */
+  border: 2.5px solid #fbbf24; /* Golden border */
+  box-shadow: 0 3px 6px rgba(0,0,0,0.6);
+  pointer-events: none;
+  left: calc(50% - 14px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: left 0.1s ease-out;
+}
+.inner-star-graphic {
+  color: #fbbf24;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+
+/* ===================================================
+   PLAYING ARENA FULL SCREEN & RED BORDER REMOVAL
+=================================================== */
+.mobile-frame:has(#carrom-options-section.active),
+.mobile-frame:has(#carrom-matchmaking-section.active),
+.mobile-frame:has(#carrom-gameplay-section.active),
+.mobile-frame:has(#arena-section.active) {
+  max-width: 100% !important;
+  width: 100% !important;
+  height: 100vh !important;
+  border-radius: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
 
 /* ===================================================
    GAMEPLAY FULL SCREEN OVERRIDES
@@ -1404,84 +1629,72 @@ body.admin-mode .user-profile-bar { display: none; }
   </div>
 </div>
 
-<!-- C. PROFESSIONAL CARROM GAMEPLAY BOARD (EXACT IMAGE CLONE) -->
-<div id="carrom-gameplay-section" class="form-section" style="background: radial-gradient(circle, #4d1c8f 0%, #1c0836 100%); padding: 15px 12px; justify-content: space-between; position: relative;">
+<!-- C. PROFESSIONAL CARROM GAMEPLAY BOARD (EXACT SCREENSHOT CLONE) -->
+<div id="carrom-gameplay-section" class="form-section exact-screenshot-layout">
   
-  <!-- 1. TOP HEADER: PLAYERS PROFILE & POT COINS -->
-  <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 5px;">
+  <!-- 1. TOP HEADER BAR (STATUS & PAUSE) -->
+  <div class="top-status-bar">
+    <span class="game-badge-carrom">Carrom</span>
+    <div class="top-controls">
+      <button class="icon-btn-ctrl">🔊</button>
+      <button class="icon-btn-ctrl">•••</button>
+      <button class="icon-btn-ctrl" onclick="quitCarromGame()">✕</button>
+    </div>
+  </div>
+
+  <!-- 2. PLAYERS PROFILE & COINS BET HEADER -->
+  <div class="players-score-header">
     
-    <!-- Left Player Card (Liyana / User) -->
-    <div style="display: flex; flex-direction: column; align-items: center; width: 30%;">
-      <div style="position: relative; width: 64px; height: 64px; border: 4px solid #ffd700; border-radius: 12px; box-shadow: 0 0 10px rgba(255, 215, 0, 0.4); background: #2a114f; display: flex; align-items: center; justify-content: center; overflow: hidden;">
-        <!-- Glowing Avatar Placeholder -->
-        <span style="font-size: 26px;">👩</span>
-        <!-- Online Status Dot -->
-        <div style="position: absolute; bottom: 2px; right: 2px; width: 10px; height: 10px; background: #10b981; border: 2px solid #2a114f; border-radius: 50%;"></div>
+    <!-- Left Player (YOU) -->
+    <div class="player-profile-block">
+      <span class="profile-label">YOU</span>
+      <div class="profile-avatar-frame red-frame">
+        <div class="avatar-silhouette">👤</div>
       </div>
-      <span id="carrom-p1-name" style="font-size: 13px; font-weight: 800; color: #fff; margin-top: 5px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">Liyana</span>
-      <!-- Pocketed Coins count -->
-      <div style="display: flex; align-items: center; gap: 4px; margin-top: 2px; font-size: 11px; color: #94a3b8;">
-        <span style="display: inline-block; width: 8px; height: 8px; background: #111; border-radius: 50%;"></span>
-        <span id="carrom-p1-tally">0</span>
+      <div class="points-badge-row">
+        <span class="coin-icon white-dot"></span>
+        <span id="carrom-p1-tally" class="points-text-num">0</span>
       </div>
     </div>
 
-    <!-- Center Pot Value -->
-    <div style="display: flex; flex-direction: column; align-items: center; text-align: center; width: 40%;">
-      <!-- Gold Coins Stack Graphic -->
-      <div style="position: relative; width: 45px; height: 35px; display: flex; align-items: center; justify-content: center;">
-        <span style="font-size: 28px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));">🪙</span>
-        <span style="font-size: 20px; position: absolute; left: 18px; top: 8px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));">🪙</span>
+    <!-- Center Bet Board -->
+    <div class="center-pot-block">
+      <div class="gold-coins-bet-stack">
+        🪙🪙 <span>50</span>
       </div>
-      <span id="carrom-pot-coins" style="font-size: 15px; font-weight: 800; color: #ffffff; letter-spacing: 0.5px; margin-top: 4px; text-shadow: 0 0 8px rgba(255,255,255,0.4);">1000 Coins</span>
     </div>
 
-    <!-- Right Player Card (Yamin / AI Robot) -->
-    <div style="display: flex; flex-direction: column; align-items: center; width: 30%;">
-      <div id="carrom-p2-frame" style="position: relative; width: 64px; height: 64px; border: 4px solid #ff0055; border-radius: 12px; box-shadow: 0 0 10px rgba(255, 0, 85, 0.4); background: #2a114f; display: flex; align-items: center; justify-content: center; overflow: hidden;">
-        <!-- Glowing Avatar Placeholder -->
-        <span id="carrom-p2-avatar" style="font-size: 26px;">👨</span>
-        <!-- Online/Demo Status Dot -->
-        <div id="carrom-p2-status" style="position: absolute; bottom: 2px; right: 2px; width: 10px; height: 10px; background: #10b981; border: 2px solid #2a114f; border-radius: 50%;"></div>
+    <!-- Right Player (OPPONENT) -->
+    <div class="player-profile-block">
+      <div class="top-right-pause-holder">
+        <button class="pause-bars-btn">⏸</button>
       </div>
-      <span id="carrom-p2-name" style="font-size: 13px; font-weight: 800; color: #fff; margin-top: 5px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">Yamin</span>
-      <!-- Pocketed Coins count -->
-      <div style="display: flex; align-items: center; gap: 4px; margin-top: 2px; font-size: 11px; color: #94a3b8;">
-        <span style="display: inline-block; width: 8px; height: 8px; background: #fff; border-radius: 50%; border: 1px solid #777;"></span>
-        <span id="carrom-p2-tally">0</span>
+      <span class="profile-label">OPPONENT</span>
+      <div class="profile-avatar-frame blue-frame">
+        <div class="avatar-silhouette">👤</div>
+      </div>
+      <div class="points-badge-row">
+        <span class="coin-icon black-dot"></span>
+        <span id="carrom-p2-tally" class="points-text-num">0</span>
       </div>
     </div>
 
   </div>
 
-  <!-- 2. MAIN PREMIUM CARROM CANVAS (WITH GOLD RIM FRAME) -->
-  <div style="position: relative; width: 320px; height: 320px; border-radius: 20px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.9); border: 8px solid #cca056; background: #dfb288; align-self: center; display: flex; align-items: center; justify-content: center;">
+  <!-- 3. PREMIUM WOODEN CARROM BOARD AREA -->
+  <div class="board-outer-container">
     <canvas id="carromCanvas" width="304" height="304"></canvas>
   </div>
 
-  <!-- 3. BOTTOM SLIDER: GOLD TRACK AND GREEN STRIKER -->
-  <div style="width: 100%; display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 5px;">
-    <!-- Wooden Golden Track Wrapper -->
-    <div style="position: relative; width: 100%; max-width: 320px; height: 32px; background: linear-gradient(180deg, #d49f57 0%, #996c33 100%); border: 3px solid #6b471c; border-radius: 20px; display: flex; align-items: center; padding: 0 12px; box-shadow: inset 0 3px 6px rgba(0,0,0,0.5), 0 4px 10px rgba(0,0,0,0.45);">
-      <!-- Striker Miniature Overlay to move strictly on track -->
-      <input type="range" id="carrom-slider" min="35" max="269" value="152" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 10;" oninput="onStrikerSlide(this.value)">
-      
-      <!-- Styled slider handle mimicking the green striker -->
-      <div id="slider-striker-handle" style="position: absolute; width: 22px; height: 22px; border-radius: 50%; background: radial-gradient(circle, #5cc8a5 0%, #177154 100%); border: 2px solid #ffffff; box-shadow: 0 2px 5px rgba(0,0,0,0.5); pointer-events: none; left: calc(50% - 11px);">
-        <!-- Cross-pattern inside striker slider handle -->
-        <div style="width: 100%; height: 100%; border-radius: 50%; border: 1px dotted rgba(255,255,255,0.4); display: flex; align-items: center; justify-content: center; font-size: 8px; color: #fff; font-weight: 900;">+</div>
+  <!-- 4. BOTTOM GREEN SLIDER WITH MAROON GOLD STAR HANDLE -->
+  <div class="bottom-controls-container">
+    <div class="wooden-slider-track">
+      <input type="range" id="carrom-slider" min="35" max="269" value="152" oninput="onStrikerSlide(this.value)">
+      <div id="slider-striker-handle" class="maroon-gold-star-handle">
+        <div class="inner-star-graphic">★</div>
       </div>
     </div>
-    
-    <p style="font-size: 10px; color: #a291be; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; text-align: center;">
-      Drag Slider to Aim | Pull back on Striker to Shoot
-    </p>
   </div>
-
-  <!-- 4. EXIT OPTION -->
-  <button class="btn-submit" onclick="quitCarromGame()" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5; margin-top: 5px; padding: 8px; font-size: 11px; font-weight: 800; border-radius: 8px; box-shadow: none;">
-    🏳️ LEAVE ARENA
-  </button>
 
 </div>
 
@@ -2572,39 +2785,48 @@ function searchOnlinePlayers() {
 
 // 3. 2D Interactive Physics Engine for Carrom Board
 // Dynamic Player labels based on Demo/Real Mode
+// In helper functions ko script tag mein initCarromEngine ke bilkul upar rakh dein
+function safeSetText(id, text) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = text;
+}
+function safeSetStyle(id, prop, val) {
+  const el = document.getElementById(id);
+  if (el && el.style) el.style[prop] = val;
+}
+
+// Ab is pure initCarromEngine() function ko replace karein
 function initCarromEngine() {
   carromGameActive = true;
   p1Score = 0;
   p2Score = 0;
   
-  // Set Liyana's Name (User)
-  document.getElementById('carrom-p1-name').textContent = currentUser.name || "Liyana";
-  document.getElementById('carrom-p1-tally').textContent = p1Score;
+  // Safely set text values to avoid null pointer crashes
+  safeSetText('carrom-p1-name', currentUser ? (currentUser.name || "YOU") : "YOU");
+  safeSetText('carrom-p1-tally', p1Score);
 
   let gameModeEl = document.getElementById('carrom-game-mode');
   let scoreP2El = document.getElementById('carrom-score-p2');
 
   if (isDemoMode) {
-    // Demo Mode Configuration safely
     if (gameModeEl) gameModeEl.textContent = "DEMO MODE";
     if (scoreP2El) scoreP2El.style.display = 'none';
     
-    document.getElementById('carrom-pot-coins').textContent = "Demo Play";
-    document.getElementById('carrom-p2-name').textContent = "Robot (Demo)";
-    document.getElementById('carrom-p2-avatar').textContent = "🤖";
-    document.getElementById('carrom-p2-frame').style.borderColor = "#00f2fe"; 
-    document.getElementById('carrom-p2-status').style.background = "#3b82f6"; 
-    document.getElementById('carrom-p2-tally').textContent = "0";
+    safeSetText('carrom-pot-coins', "Demo Play");
+    safeSetText('carrom-p2-name', "Robot (Demo)");
+    safeSetText('carrom-p2-avatar', "🤖");
+    safeSetStyle('carrom-p2-frame', 'borderColor', "#00f2fe"); 
+    safeSetStyle('carrom-p2-status', 'background', "#3b82f6"); 
+    safeSetText('carrom-p2-tally', "0");
   } else {
-    // Real Mode Configuration safely
     if (gameModeEl) gameModeEl.textContent = "REAL MATCH";
     if (scoreP2El) scoreP2El.style.display = 'inline';
     
-    document.getElementById('carrom-pot-coins').textContent = "1000 Coins";
-    document.getElementById('carrom-p2-avatar').textContent = "👨";
-    document.getElementById('carrom-p2-frame').style.borderColor = "#ff0055"; 
-    document.getElementById('carrom-p2-status').style.background = "#10b981"; 
-    document.getElementById('carrom-p2-tally').textContent = "0";
+    safeSetText('carrom-pot-coins', "1000 Coins");
+    safeSetText('carrom-p2-avatar', "👨");
+    safeSetStyle('carrom-p2-frame', 'borderColor', "#ff0055"); 
+    safeSetStyle('carrom-p2-status', 'background', "#10b981"); 
+    safeSetText('carrom-p2-tally', "0");
   }
 
   // Re-center Striker Y coordinate (fits 304 width canvas)
@@ -2615,24 +2837,49 @@ function initCarromEngine() {
   striker.isPlaced = true;
   
   // Sync HTML range slider
-  document.getElementById('carrom-slider').value = 152;
-  updateHandlePosition(152);
-
-  // Coins Spawn (Center circle structure)
-  coins = [];
-  // Center Queen (Red)
-  coins.push({ x: 152, y: 152, vx: 0, vy: 0, r: 8, mass: 1.0, color: '#b91c1c', scoreVal: 50 }); // Queen
-
-  // Inner rings (Concentric Setup)
-  let angleOffset = Math.PI / 3;
-  for (let i = 0; i < 6; i++) {
-    let angle = i * angleOffset;
-    let cx = 152 + Math.cos(angle) * 19;
-    let cy = 152 + Math.sin(angle) * 19;
-    let coinColor = (i % 2 === 0) ? '#ffffff' : '#222222';
-    let val = (i % 2 === 0) ? 20 : 10;
-    coins.push({ x: cx, y: cy, vx: 0, vy: 0, r: 8, mass: 1.0, color: coinColor, scoreVal: val });
+  const sliderEl = document.getElementById('carrom-slider');
+  if (sliderEl) {
+    sliderEl.value = 152;
+    updateHandlePosition(152);
   }
+
+  // Coins Spawn (Exact 19 Hexagonal Packing Setup)
+  coins = [];
+  
+  const coinRadius = 8.2;
+  const spacing = coinRadius * 2;
+  const rowHeight = spacing * 0.866; 
+  const centerX = 152;
+  const centerY = 152;
+
+  // Row -2
+  coins.push({ x: centerX - spacing, y: centerY - 2 * rowHeight, vx: 0, vy: 0, r: coinRadius, mass: 1.0, color: '#ffffff', scoreVal: 10 });
+  coins.push({ x: centerX,           y: centerY - 2 * rowHeight, vx: 0, vy: 0, r: coinRadius, mass: 1.0, color: '#222222', scoreVal: 10 });
+  coins.push({ x: centerX + spacing, y: centerY - 2 * rowHeight, vx: 0, vy: 0, r: coinRadius, mass: 1.0, color: '#ffffff', scoreVal: 10 });
+
+  // Row -1
+  coins.push({ x: centerX - 1.5 * spacing, y: centerY - rowHeight, vx: 0, vy: 0, r: coinRadius, mass: 1.0, color: '#222222', scoreVal: 10 });
+  coins.push({ x: centerX - 0.5 * spacing, y: centerY - rowHeight, vx: 0, vy: 0, r: coinRadius, mass: 1.0, color: '#ffffff', scoreVal: 10 });
+  coins.push({ x: centerX + 0.5 * spacing, y: centerY - rowHeight, vx: 0, vy: 0, r: coinRadius, mass: 1.0, color: '#222222', scoreVal: 10 });
+  coins.push({ x: centerX + 1.5 * spacing, y: centerY - rowHeight, vx: 0, vy: 0, r: coinRadius, mass: 1.0, color: '#ffffff', scoreVal: 10 });
+
+  // Row 0
+  coins.push({ x: centerX - 2 * spacing, y: centerY, vx: 0, vy: 0, r: coinRadius, mass: 1.0, color: '#ffffff', scoreVal: 10 });
+  coins.push({ x: centerX - spacing,     y: centerY, vx: 0, vy: 0, r: coinRadius, mass: 1.0, color: '#222222', scoreVal: 10 });
+  coins.push({ x: centerX,               y: centerY, vx: 0, vy: 0, r: coinRadius, mass: 1.0, color: '#ff0f37', scoreVal: 50 }); 
+  coins.push({ x: centerX + spacing,     y: centerY, vx: 0, vy: 0, r: coinRadius, mass: 1.0, color: '#222222', scoreVal: 10 });
+  coins.push({ x: centerX + 2 * spacing, y: centerY, vx: 0, vy: 0, r: coinRadius, mass: 1.0, color: '#ffffff', scoreVal: 10 });
+
+  // Row 1
+  coins.push({ x: centerX - 1.5 * spacing, y: centerY + rowHeight, vx: 0, vy: 0, r: coinRadius, mass: 1.0, color: '#222222', scoreVal: 10 });
+  coins.push({ x: centerX - 0.5 * spacing, y: centerY + rowHeight, vx: 0, vy: 0, r: coinRadius, mass: 1.0, color: '#ffffff', scoreVal: 10 });
+  coins.push({ x: centerX + 0.5 * spacing, y: centerY + rowHeight, vx: 0, vy: 0, r: coinRadius, mass: 1.0, color: '#222222', scoreVal: 10 });
+  coins.push({ x: centerX + 1.5 * spacing, y: centerY + rowHeight, vx: 0, vy: 0, r: coinRadius, mass: 1.0, color: '#ffffff', scoreVal: 10 });
+
+  // Row 2
+  coins.push({ x: centerX - spacing, y: centerY + 2 * rowHeight, vx: 0, vy: 0, r: coinRadius, mass: 1.0, color: '#ffffff', scoreVal: 10 });
+  coins.push({ x: centerX,           y: centerY + 2 * rowHeight, vx: 0, vy: 0, r: coinRadius, mass: 1.0, color: '#222222', scoreVal: 10 });
+  coins.push({ x: centerX + spacing, y: centerY + 2 * rowHeight, vx: 0, vy: 0, r: coinRadius, mass: 1.0, color: '#ffffff', scoreVal: 10 });
 
   // Listeners Setup
   carromCanvas.addEventListener('mousedown', onAimStart);
@@ -2664,153 +2911,162 @@ function updateHandlePosition(val) {
   }
 }
 
-// 2D Canvas rendering matching the precise design of the user's uploaded screenshot
 function drawCarromBoard() {
   carromCtx.clearRect(0, 0, 304, 304);
 
-  // 1. Natural Wood Radial Shading (Tasveer ke mutabiq elegant light-peach pattern)
-  let grad = carromCtx.createRadialGradient(152, 152, 10, 152, 152, 150);
-  grad.addColorStop(0, '#f9dfc5');
-  grad.addColorStop(1, '#db9b61');
-  carromCtx.fillStyle = grad;
+  // 1. Light Maple wood background
+  carromCtx.fillStyle = '#e3aa74';
   carromCtx.fillRect(0, 0, 304, 304);
 
-  // 2. Corner Golden Guards / Bumpers
-  carromCtx.fillStyle = '#cc9343';
-  carromCtx.beginPath(); carromCtx.arc(15, 15, 15, 0, Math.PI * 2); carromCtx.fill();
-  carromCtx.beginPath(); carromCtx.arc(289, 15, 15, 0, Math.PI * 2); carromCtx.fill();
-  carromCtx.beginPath(); carromCtx.arc(15, 289, 15, 0, Math.PI * 2); carromCtx.fill();
-  carromCtx.beginPath(); carromCtx.arc(289, 289, 15, 0, Math.PI * 2); carromCtx.fill();
+  // 2. Main Double Border Lines
+  carromCtx.strokeStyle = 'rgba(74, 43, 20, 0.7)';
+  carromCtx.lineWidth = 1.5;
+  carromCtx.strokeRect(36, 36, 232, 232);
+  
+  carromCtx.lineWidth = 0.8;
+  carromCtx.strokeRect(39, 39, 226, 226);
 
-  // 3. Baselines Setup (Thin lines with tiny endpoint red circles)
-  carromCtx.strokeStyle = 'rgba(74, 43, 20, 0.45)';
-  carromCtx.lineWidth = 1.2;
-
-  let baselinesY = [54, 250]; // Horizontal guide lines
-  baselinesY.forEach(y => {
+  // 3. Baselines with circles
+  let baselines = [54, 250];
+  baselines.forEach(y => {
     carromCtx.beginPath();
-    carromCtx.moveTo(40, y);
-    carromCtx.lineTo(264, y);
+    carromCtx.moveTo(56, y);
+    carromCtx.lineTo(248, y);
     carromCtx.stroke();
-    // Red dot endpoints
-    carromCtx.fillStyle = '#b91c1c';
-    carromCtx.beginPath(); carromCtx.arc(40, y, 3, 0, Math.PI*2); carromCtx.fill();
-    carromCtx.beginPath(); carromCtx.arc(264, y, 3, 0, Math.PI*2); carromCtx.fill();
+    drawConcentricBaseCircle(56, y);
+    drawConcentricBaseCircle(248, y);
   });
 
-  let baselinesX = [40, 264]; // Vertical guide lines
+  let baselinesX = [54, 250];
   baselinesX.forEach(x => {
     carromCtx.beginPath();
-    carromCtx.moveTo(x, 40);
-    carromCtx.lineTo(x, 264);
+    carromCtx.moveTo(x, 56);
+    carromCtx.lineTo(x, 248);
     carromCtx.stroke();
-    // Red dot endpoints
-    carromCtx.fillStyle = '#b91c1c';
-    carromCtx.beginPath(); carromCtx.arc(x, 40, 3, 0, Math.PI*2); carromCtx.fill();
-    carromCtx.beginPath(); carromCtx.arc(x, 264, 3, 0, Math.PI*2); carromCtx.fill();
+    drawConcentricBaseCircle(x, 56);
+    drawConcentricBaseCircle(x, 248);
   });
 
-  // 4. Center Mandala Pattern & More Dots (Dots ko barhane ke liye multi-circle design)
-  carromCtx.strokeStyle = 'rgba(122, 69, 31, 0.35)';
+  // Corner Flowers decoration helper
+  drawCornerFloralPattern(75, 75);
+  drawCornerFloralPattern(229, 75);
+  drawCornerFloralPattern(75, 229);
+  drawCornerFloralPattern(229, 229);
+
+  // 4. Center Circle
+  carromCtx.strokeStyle = 'rgba(74, 43, 20, 0.7)';
+  carromCtx.lineWidth = 1;
   carromCtx.beginPath();
-  carromCtx.arc(152, 152, 45, 0, Math.PI * 2);
+  carromCtx.arc(152, 152, 42, 0, Math.PI * 2);
   carromCtx.stroke();
 
-  carromCtx.beginPath();
-  carromCtx.arc(152, 152, 40, 0, Math.PI * 2);
-  carromCtx.stroke();
-
-  // Draw concentric tiny aesthetic dots around the center circle (Increased dots)
-  carromCtx.fillStyle = '#b91c1c';
-  for (let i = 0; i < 24; i++) {
-    let angle = (i * Math.PI) / 12;
-    let dx = 152 + Math.cos(angle) * 42;
-    let dy = 152 + Math.sin(angle) * 42;
-    carromCtx.beginPath();
-    carromCtx.arc(dx, dy, 1.5, 0, Math.PI * 2);
-    carromCtx.fill();
-  }
-
-  // Draw concentric tiny dots along baseline corners (dots increased)
-  carromCtx.fillStyle = 'rgba(74, 43, 20, 0.6)';
-  let dotPositions = [40, 264];
-  dotPositions.forEach(x => {
-    dotPositions.forEach(y => {
-      // Corners pattern with small dots
-      for (let j = 1; j <= 4; j++) {
-        carromCtx.beginPath();
-        carromCtx.arc(x + (x===40?10:-10)*j, y, 1, 0, Math.PI*2);
-        carromCtx.arc(x, y + (y===40?10:-10)*j, 1, 0, Math.PI*2);
-        carromCtx.fill();
-      }
-    });
-  });
-
-  // 5. Draw Corner Pockets (Deep Pure Black Zones)
-  let pocketsMap = [
-    { x: 18, y: 18, r: 16 },
-    { x: 286, y: 18, r: 16 },
-    { x: 18, y: 286, r: 16 },
-    { x: 286, y: 286, r: 16 }
+  // 5. Deep Corner Pockets with Green Arc Bumpers
+  let pocketPoints = [
+    { x: 18, y: 18 },
+    { x: 286, y: 18 },
+    { x: 18, y: 286 },
+    { x: 286, y: 286 }
   ];
-  pocketsMap.forEach(pocket => {
-    carromCtx.fillStyle = '#0a0a0a';
+
+  pocketPoints.forEach(pt => {
+    carromCtx.fillStyle = '#105332';
     carromCtx.beginPath();
-    carromCtx.arc(pocket.x, pocket.y, pocket.r, 0, Math.PI * 2);
+    carromCtx.arc(pt.x, pt.y, 25, 0, Math.PI * 2);
     carromCtx.fill();
-    carromCtx.strokeStyle = '#222';
-    carromCtx.lineWidth = 1;
-    carromCtx.stroke();
+
+    carromCtx.fillStyle = '#060606';
+    carromCtx.beginPath();
+    carromCtx.arc(pt.x, pt.y, 14, 0, Math.PI * 2);
+    carromCtx.fill();
   });
 
-  // 6. Draw Game Coins (Exactly matching Yamin and Liyana's colors)
+  // 6. Draw Game Coins (Shaded 3D Look)
   coins.forEach(coin => {
-    carromCtx.fillStyle = coin.color;
+    let coinGrad = carromCtx.createRadialGradient(coin.x - 2, coin.y - 2, 1, coin.x, coin.y, coin.r);
+    if (coin.color === '#ffffff') {
+      coinGrad.addColorStop(0, '#ffffff');
+      coinGrad.addColorStop(0.7, '#f1f5f9');
+      coinGrad.addColorStop(1, '#cbd5e1');
+    } else if (coin.color === '#ff0f37') { // Queen
+      coinGrad.addColorStop(0, '#ff6b8b');
+      coinGrad.addColorStop(0.8, '#ff0f37');
+      coinGrad.addColorStop(1, '#99001b');
+    } else { // Black Gotiyan
+      coinGrad.addColorStop(0, '#4b5563');
+      coinGrad.addColorStop(0.8, '#1f2937');
+      coinGrad.addColorStop(1, '#111827');
+    }
+
+    carromCtx.fillStyle = coinGrad;
     carromCtx.beginPath();
     carromCtx.arc(coin.x, coin.y, coin.r, 0, Math.PI * 2);
     carromCtx.fill();
-    
-    // Coin internal rings layout
-    carromCtx.strokeStyle = coin.color === '#222222' ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)';
-    carromCtx.lineWidth = 1;
-    carromCtx.beginPath();
-    carromCtx.arc(coin.x, coin.y, 4, 0, Math.PI * 2);
-    carromCtx.stroke();
 
-    if (coin.color === '#b91c1c') { // Queen Highlights
-      carromCtx.fillStyle = '#fbbf24'; // Golden core for Queen
-      carromCtx.beginPath(); carromCtx.arc(coin.x, coin.y, 2, 0, Math.PI*2); carromCtx.fill();
-    }
+    carromCtx.strokeStyle = coin.color === '#ffffff' ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.15)';
+    carromCtx.lineWidth = 0.8;
+    carromCtx.beginPath();
+    carromCtx.arc(coin.x, coin.y, coin.r - 2.5, 0, Math.PI * 2);
+    carromCtx.stroke();
+    
+    carromCtx.beginPath();
+    carromCtx.arc(coin.x, coin.y, coin.r - 5, 0, Math.PI * 2);
+    carromCtx.stroke();
   });
 
-  // 7. Draw Jade Green Striker (Patterned concentric visual texture)
-  // Matching the striker Y position update
-  carromCtx.fillStyle = 'radial-gradient(circle, #5cc8a5 0%, #177154 100%)';
-  let strikerGrad = carromCtx.createRadialGradient(striker.x, striker.y, 2, striker.x, striker.y, striker.r);
-  strikerGrad.addColorStop(0, '#5cc8a5');
-  strikerGrad.addColorStop(1, '#177154');
-  
-  carromCtx.fillStyle = strikerGrad;
-  carromCtx.beginPath();
-  carromCtx.arc(striker.x, striker.y, striker.r, 0, Math.PI * 2);
-  carromCtx.fill();
-  
-  // Striker outer boundary
-  carromCtx.strokeStyle = '#ffffff';
-  carromCtx.lineWidth = 1.2;
-  carromCtx.beginPath();
-  carromCtx.arc(striker.x, striker.y, striker.r, 0, Math.PI * 2);
-  carromCtx.stroke();
+  // 7. Draw Maroon Striker with Golden Star
+  drawStrikerGraphic(striker.x, striker.y, striker.r);
+}
 
-  // Striker inner concentric circles
-  carromCtx.strokeStyle = 'rgba(255,255,255,0.5)';
+function drawConcentricBaseCircle(x, y) {
+  carromCtx.strokeStyle = 'rgba(74, 43, 20, 0.7)';
   carromCtx.lineWidth = 1;
   carromCtx.beginPath();
-  carromCtx.arc(striker.x, striker.y, striker.r - 4, 0, Math.PI * 2);
+  carromCtx.arc(x, y, 6, 0, Math.PI * 2);
   carromCtx.stroke();
+
+  carromCtx.fillStyle = '#b91c1c';
   carromCtx.beginPath();
-  carromCtx.arc(striker.x, striker.y, striker.r - 8, 0, Math.PI * 2);
+  carromCtx.arc(x, y, 2.5, 0, Math.PI * 2);
+  carromCtx.fill();
+}
+
+function drawCornerFloralPattern(cx, cy) {
+  carromCtx.strokeStyle = 'rgba(74, 43, 20, 0.45)';
+  carromCtx.lineWidth = 0.8;
+  for (let i = 0; i < 8; i++) {
+    let angle = (i * Math.PI) / 4;
+    carromCtx.beginPath();
+    carromCtx.arc(cx + Math.cos(angle) * 7, cy + Math.sin(angle) * 7, 4, 0, Math.PI * 2);
+    carromCtx.stroke();
+  }
+  carromCtx.beginPath();
+  carromCtx.arc(cx, cy, 3.5, 0, Math.PI * 2);
   carromCtx.stroke();
+}
+
+function drawStrikerGraphic(x, y, r) {
+  carromCtx.fillStyle = '#5c0d12';
+  carromCtx.beginPath();
+  carromCtx.arc(x, y, r, 0, Math.PI * 2);
+  carromCtx.fill();
+
+  carromCtx.strokeStyle = '#fbbf24';
+  carromCtx.lineWidth = 2;
+  carromCtx.stroke();
+
+  carromCtx.beginPath();
+  carromCtx.arc(x, y, r - 3, 0, Math.PI * 2);
+  carromCtx.stroke();
+
+  carromCtx.fillStyle = '#fbbf24';
+  for (let i = 0; i < 8; i++) {
+    let angle = (i * Math.PI) / 4;
+    carromCtx.beginPath();
+    carromCtx.moveTo(x, y);
+    carromCtx.lineTo(x + Math.cos(angle) * (r - 4.5), y + Math.sin(angle) * (r - 4.5));
+    carromCtx.lineTo(x + Math.cos(angle + 0.15) * (r - 6), y + Math.sin(angle + 0.15) * (r - 6));
+    carromCtx.fill();
+  }
 }
 
 // 5. Game Over / Quit Logic
