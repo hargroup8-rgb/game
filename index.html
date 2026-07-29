@@ -8,12 +8,30 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <style>
 
+
+
 /* ===================================================
-   CHAT SYSTEM STYLES
+   GAMEPLAY FULL SCREEN OVERRIDES
 =================================================== */
-/* ===================================================
-   CHAT SYSTEM STYLES (RESPONSIVE & AUTO-ADJUST)
-=================================================== */
+/* Jab bhi game options, matchmaking, actual board, ya arena section active ho, top 3D header ko hide kar dein */
+.mobile-frame:has(#carrom-options-section.active) .canvas-container,
+.mobile-frame:has(#carrom-matchmaking-section.active) .canvas-container,
+.mobile-frame:has(#carrom-gameplay-section.active) .canvas-container,
+.mobile-frame:has(#arena-section.active) .canvas-container {
+  display: none !important;
+}
+
+/* Header hide hone ke baad game layout frame ko barha kar full height dene ke liye */
+.mobile-frame:has(#carrom-options-section.active) .content-body,
+.mobile-frame:has(#carrom-matchmaking-section.active) .content-body,
+.mobile-frame:has(#carrom-gameplay-section.active) .content-body,
+.mobile-frame:has(#arena-section.active) .content-body {
+  height: 100%;
+  padding-top: 20px; /* Game screen ko top se munasib space dene ke liye */
+}
+
+
+
 .chat-modal {
   position: fixed; 
   top: 0; 
@@ -970,8 +988,8 @@ body.admin-mode .btn-approve, body.admin-mode .btn-reject {
 }
 
 @keyframes pulseBadge {
-  0% { transform: scale(1); }
-  100% { transform: scale(1.15); }
+  0% { transform: scale(1); box-shadow: 0 0 10px rgba(0,242,254,0.3); }
+  100% { transform: scale(1.1); box-shadow: 0 0 25px rgba(0,242,254,0.7); }
 }
 
 /* ===================================================
@@ -1248,7 +1266,7 @@ body.admin-mode .user-profile-bar { display: none; }
                 <h3 class="slide-game-title">Carrom Board</h3>
                 <p class="slide-game-desc">Entry: 300 Coins | Winner Gets: 500 Coins</p>
               </div>
-              <button class="btn-play-large" onclick="openGame('Carrom Board', '🎯', 'carrom-bg')">PLAY CARROM (300 COINS)</button>
+<button class="btn-play-large" onclick="openCarromOptions()">PLAY CARROM (300 COINS)</button>
             </div>
 
             <!-- SLIDE 2: SNOOKER -->
@@ -1344,6 +1362,129 @@ body.admin-mode .user-profile-bar { display: none; }
         </div>
       </div>
 
+<!-- A. CARROM SELECTION OPTIONS -->
+<div id="carrom-options-section" class="form-section">
+  <div style="text-align: center; padding-top: 15px;">
+    <div class="large-game-icon carrom-bg" style="margin: 0 auto 15px auto;">🎯</div>
+    <h3 style="font-size: 22px; font-weight: 800; color: #fff; letter-spacing: 1px;">CARROM BOARD</h3>
+    <p style="color: #94a3b8; font-size: 13px; margin-bottom: 25px;">Game mode select karein aur arena mein dakhil hon.</p>
+    
+    <!-- Option 1: Demo Mode -->
+    <button class="btn-submit" onclick="startCarromDemo()" style="background: linear-gradient(135deg, #00f2fe, #4facfe); color: #05050a; margin-bottom: 12px; font-weight: 800;">
+      🎮 Play Free Demo
+    </button>
+    
+    <!-- Option 2: Real Game (Deduction of Paid Coins) -->
+    <button class="btn-submit" onclick="verifyCarromRealGame()" style="background: linear-gradient(135deg, #ff0055, #7928ca); color: #fff; margin-bottom: 20px;">
+      💰 Real Game (300 Coins)
+    </button>
+    
+    <button class="btn-submit btn-back" onclick="backToHome()">BACK TO LOBBY</button>
+  </div>
+</div>
+
+<!-- B. CARROM MATCHMAKING LOBBY -->
+<div id="carrom-matchmaking-section" class="form-section">
+  <div style="text-align: center; padding-top: 15px;">
+    <div class="large-game-icon carrom-bg" style="margin: 0 auto 15px auto; animation: pulseBadge 1.2s infinite alternate;">🎯</div>
+    <h3 style="font-size: 20px; font-weight: 800; color: #fff; text-transform: uppercase; letter-spacing: 1px;">Carrom Matchmaking</h3>
+    
+    <!-- Radar / Search Panel -->
+    <div id="carrom-radar-box" style="margin: 25px 0; padding: 25px; background: rgba(0, 242, 254, 0.04); border-radius: 14px; border: 1.5px solid rgba(0, 242, 254, 0.25); text-align: center;">
+      <p id="carrom-search-status" style="color: #00f2fe; font-weight: 800; font-size: 14px; text-transform: uppercase;">Lobby: Ready to Play</p>
+      <p id="carrom-search-sub" style="color: #94a3b8; font-size: 12px; margin-top: 8px;">Neechay diye gaye Play button par click kar ke online player search karein.</p>
+    </div>
+
+    <!-- Play/Search Button -->
+    <button id="carrom-play-btn" class="btn-submit" onclick="searchOnlinePlayers()" style="background: linear-gradient(135deg, #10b981, #059669); font-size: 15px; padding: 14px; font-weight: 900; letter-spacing: 1px;">
+      🟢 PLAY (SEARCH OPPONENT)
+    </button>
+
+    <button class="btn-submit btn-back" onclick="backToCarromOptions()" style="margin-top: 15px;">CANCEL</button>
+  </div>
+</div>
+
+<!-- C. PROFESSIONAL CARROM GAMEPLAY BOARD (EXACT IMAGE CLONE) -->
+<div id="carrom-gameplay-section" class="form-section" style="background: radial-gradient(circle, #4d1c8f 0%, #1c0836 100%); padding: 15px 12px; justify-content: space-between; position: relative;">
+  
+  <!-- 1. TOP HEADER: PLAYERS PROFILE & POT COINS -->
+  <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 5px;">
+    
+    <!-- Left Player Card (Liyana / User) -->
+    <div style="display: flex; flex-direction: column; align-items: center; width: 30%;">
+      <div style="position: relative; width: 64px; height: 64px; border: 4px solid #ffd700; border-radius: 12px; box-shadow: 0 0 10px rgba(255, 215, 0, 0.4); background: #2a114f; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+        <!-- Glowing Avatar Placeholder -->
+        <span style="font-size: 26px;">👩</span>
+        <!-- Online Status Dot -->
+        <div style="position: absolute; bottom: 2px; right: 2px; width: 10px; height: 10px; background: #10b981; border: 2px solid #2a114f; border-radius: 50%;"></div>
+      </div>
+      <span id="carrom-p1-name" style="font-size: 13px; font-weight: 800; color: #fff; margin-top: 5px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">Liyana</span>
+      <!-- Pocketed Coins count -->
+      <div style="display: flex; align-items: center; gap: 4px; margin-top: 2px; font-size: 11px; color: #94a3b8;">
+        <span style="display: inline-block; width: 8px; height: 8px; background: #111; border-radius: 50%;"></span>
+        <span id="carrom-p1-tally">0</span>
+      </div>
+    </div>
+
+    <!-- Center Pot Value -->
+    <div style="display: flex; flex-direction: column; align-items: center; text-align: center; width: 40%;">
+      <!-- Gold Coins Stack Graphic -->
+      <div style="position: relative; width: 45px; height: 35px; display: flex; align-items: center; justify-content: center;">
+        <span style="font-size: 28px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));">🪙</span>
+        <span style="font-size: 20px; position: absolute; left: 18px; top: 8px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));">🪙</span>
+      </div>
+      <span id="carrom-pot-coins" style="font-size: 15px; font-weight: 800; color: #ffffff; letter-spacing: 0.5px; margin-top: 4px; text-shadow: 0 0 8px rgba(255,255,255,0.4);">1000 Coins</span>
+    </div>
+
+    <!-- Right Player Card (Yamin / AI Robot) -->
+    <div style="display: flex; flex-direction: column; align-items: center; width: 30%;">
+      <div id="carrom-p2-frame" style="position: relative; width: 64px; height: 64px; border: 4px solid #ff0055; border-radius: 12px; box-shadow: 0 0 10px rgba(255, 0, 85, 0.4); background: #2a114f; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+        <!-- Glowing Avatar Placeholder -->
+        <span id="carrom-p2-avatar" style="font-size: 26px;">👨</span>
+        <!-- Online/Demo Status Dot -->
+        <div id="carrom-p2-status" style="position: absolute; bottom: 2px; right: 2px; width: 10px; height: 10px; background: #10b981; border: 2px solid #2a114f; border-radius: 50%;"></div>
+      </div>
+      <span id="carrom-p2-name" style="font-size: 13px; font-weight: 800; color: #fff; margin-top: 5px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">Yamin</span>
+      <!-- Pocketed Coins count -->
+      <div style="display: flex; align-items: center; gap: 4px; margin-top: 2px; font-size: 11px; color: #94a3b8;">
+        <span style="display: inline-block; width: 8px; height: 8px; background: #fff; border-radius: 50%; border: 1px solid #777;"></span>
+        <span id="carrom-p2-tally">0</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 2. MAIN PREMIUM CARROM CANVAS (WITH GOLD RIM FRAME) -->
+  <div style="position: relative; width: 320px; height: 320px; border-radius: 20px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.9); border: 8px solid #cca056; background: #dfb288; align-self: center; display: flex; align-items: center; justify-content: center;">
+    <canvas id="carromCanvas" width="304" height="304"></canvas>
+  </div>
+
+  <!-- 3. BOTTOM SLIDER: GOLD TRACK AND GREEN STRIKER -->
+  <div style="width: 100%; display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 5px;">
+    <!-- Wooden Golden Track Wrapper -->
+    <div style="position: relative; width: 100%; max-width: 320px; height: 32px; background: linear-gradient(180deg, #d49f57 0%, #996c33 100%); border: 3px solid #6b471c; border-radius: 20px; display: flex; align-items: center; padding: 0 12px; box-shadow: inset 0 3px 6px rgba(0,0,0,0.5), 0 4px 10px rgba(0,0,0,0.45);">
+      <!-- Striker Miniature Overlay to move strictly on track -->
+      <input type="range" id="carrom-slider" min="35" max="269" value="152" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 10;" oninput="onStrikerSlide(this.value)">
+      
+      <!-- Styled slider handle mimicking the green striker -->
+      <div id="slider-striker-handle" style="position: absolute; width: 22px; height: 22px; border-radius: 50%; background: radial-gradient(circle, #5cc8a5 0%, #177154 100%); border: 2px solid #ffffff; box-shadow: 0 2px 5px rgba(0,0,0,0.5); pointer-events: none; left: calc(50% - 11px);">
+        <!-- Cross-pattern inside striker slider handle -->
+        <div style="width: 100%; height: 100%; border-radius: 50%; border: 1px dotted rgba(255,255,255,0.4); display: flex; align-items: center; justify-content: center; font-size: 8px; color: #fff; font-weight: 900;">+</div>
+      </div>
+    </div>
+    
+    <p style="font-size: 10px; color: #a291be; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; text-align: center;">
+      Drag Slider to Aim | Pull back on Striker to Shoot
+    </p>
+  </div>
+
+  <!-- 4. EXIT OPTION -->
+  <button class="btn-submit" onclick="quitCarromGame()" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5; margin-top: 5px; padding: 8px; font-size: 11px; font-weight: 800; border-radius: 8px; box-shadow: none;">
+    🏳️ LEAVE ARENA
+  </button>
+
+</div>
+
 <!-- 5. GAME ARENA ROOM SECTION (WAS MISSING) -->
       <div id="arena-section" class="form-section">
         <div class="arena-container">
@@ -1362,6 +1503,8 @@ body.admin-mode .user-profile-bar { display: none; }
     </div> <!-- Close .content-body -->
   </div> <!-- Close .mobile-frame -->
 
+
+  
   
   <script>
     /* ===================================================
@@ -2068,14 +2211,32 @@ function renderChatMessages() {
   );
 
   userChats.forEach(msg => {
+    // Check karein ke kya message maine bheja hai (chahe main player hoon ya admin)
     const isSentByMe = msg.senderId === currentUser.id || (currentUser.phone === 'admin' && msg.senderId === 'admin');
     
     const div = document.createElement('div');
     div.className = `msg-bubble ${isSentByMe ? 'msg-sent' : 'msg-received'}`;
+    div.style.position = 'relative';
     
+    // Sent messages ke liye thodi padding barha rahe hain taake ticks ke liye space ban sake
+    if (isSentByMe) {
+      div.style.paddingBottom = '22px'; 
+    }
+
     let html = `<div>${msg.text}</div>`;
     if(msg.image) {
       html += `<img src="${msg.image}" class="msg-img" onclick="window.open('${msg.image}', '_blank')">`;
+    }
+    
+    // Ticks sirf bhejey gaye (sent) message par show hon ge
+    if (isSentByMe) {
+      // Agar message seen ho chuka hai (isRead: true) toh Blue Tick, warna Grey Tick
+      const tickColor = msg.isRead ? '#0033ff' : '#555555'; 
+      html += `
+        <span style="position: absolute; bottom: 4px; right: 10px; font-size: 11px; color: ${tickColor}; font-weight: 900; letter-spacing: -2px; user-select: none;">
+          ✔✔
+        </span>
+      `;
     }
     
     div.innerHTML = html;
@@ -2155,16 +2316,24 @@ function updateAdminBadge() {
 // Message Read (Seen) mark karna
 function markChatsAsRead() {
   let isUpdated = false;
+  
   chats.forEach(c => {
-    // Agar admin chat open kar le aur message admin ke liye tha
+    // Case A: Admin ne selected user ke messages parh liye (Seen)
     if (currentUser && currentUser.phone === 'admin' && c.senderId === selectedChatUserId && c.receiverId === 'admin' && !c.isRead) {
       c.isRead = true;
       isUpdated = true;
     }
+    
+    // Case B: Player ne Admin ke bhejey huay messages parh liye (Seen)
+    if (currentUser && currentUser.phone !== 'admin' && c.senderId === 'admin' && c.receiverId === currentUser.id && !c.isRead) {
+      c.isRead = true;
+      isUpdated = true;
+    }
   });
+
   if (isUpdated) {
-    saveChats();
-    updateAdminBadge();
+    saveChats();         // LocalStorage mein save karein
+    updateAdminBadge();   // Admin ke notifications update karein
   }
 }
 
@@ -2235,6 +2404,689 @@ function switchAdminTab(tabName) {
   document.getElementById('nav-' + tabName).classList.add('active');
   
   if(tabName === 'players') filterPlayersById(); // List ko fresh karega
+}
+
+
+/* ===================================================================
+   CARROM SYSTEM: MODES, MATCHMAKING & PHYSICAL CANVAS GAME ENGINE
+=================================================================== */
+
+let carromGameActive = false;
+let isDemoMode = true;
+let matchmakingSearchActive = false;
+
+// Physics Simulation variables
+let carromCanvas = document.getElementById('carromCanvas');
+let carromCtx = carromCanvas.getContext('2d');
+let animationFrameId = null;
+
+let striker = { x: 155, y: 255, vx: 0, vy: 0, r: 12, mass: 2.2, color: '#ff0055', isPlaced: true };
+let coins = [];
+let pockets = [
+  { x: 20, y: 20, r: 16 },
+  { x: 290, y: 20, r: 16 },
+  { x: 20, y: 290, r: 16 },
+  { x: 290, y: 290, r: 16 }
+];
+
+let p1Score = 0;
+let p2Score = 0;
+let isAiming = false;
+let aimStart = { x: 0, y: 0 };
+let aimEnd = { x: 0, y: 0 };
+
+// 1. Navigation Flow
+function openCarromOptions() {
+  if (!currentUser) {
+    showAlert('Pehle login karein!', 'error');
+    return;
+  }
+  document.getElementById('home-section').classList.remove('active');
+  document.getElementById('carrom-options-section').classList.add('active');
+  document.getElementById('header-title').textContent = "Carrom Arena";
+  document.getElementById('header-subtitle').textContent = "Choose Game Mode";
+}
+
+function backToHome() {
+  document.getElementById('carrom-options-section').classList.remove('active');
+  document.getElementById('home-section').classList.add('active');
+  document.getElementById('header-title').textContent = "GAME LOBBY";
+  document.getElementById('header-subtitle').textContent = "Swipe Left/Right To Change Game";
+}
+
+function startCarromDemo() {
+  isDemoMode = true;
+  document.getElementById('carrom-options-section').classList.remove('active');
+  document.getElementById('carrom-gameplay-section').classList.add('active');
+  
+  // Safe check: Agar element HTML mein hai tabhi text change karein
+  let gameModeEl = document.getElementById('carrom-game-mode');
+  if (gameModeEl) gameModeEl.textContent = "DEMO MODE";
+  
+  let scoreP2El = document.getElementById('carrom-score-p2');
+  if (scoreP2El) scoreP2El.style.display = 'none'; 
+  
+  initCarromEngine();
+}
+
+function verifyCarromRealGame() {
+  // Admin approved coin balance verify karna
+  if (currentUser.coins < 300) {
+    showAlert('Aap ke paas minimum 300 Approved Coins hone chahiye! Coins Buy karein aur Admin Approval ka wait karein.', 'error');
+    return;
+  }
+
+  // Deduct Entry Fee and mark state as playing
+  currentUser.coins -= 300;
+  currentUser.status = 'Playing';
+  saveState();
+  if (document.getElementById('user-display-coins')) {
+    document.getElementById('user-display-coins').textContent = `🪙 ${currentUser.coins} Coins`;
+  }
+
+  // Go to matchmaking Lobby
+  document.getElementById('carrom-options-section').classList.remove('active');
+  document.getElementById('carrom-matchmaking-section').classList.add('active');
+}
+
+function backToCarromOptions() {
+  if (matchmakingSearchActive) {
+    // If canceled, return their 300 coins
+    currentUser.coins += 300;
+    currentUser.status = 'Online';
+    saveState();
+    if (document.getElementById('user-display-coins')) {
+      document.getElementById('user-display-coins').textContent = `🪙 ${currentUser.coins} Coins`;
+    }
+    matchmakingSearchActive = false;
+  }
+  document.getElementById('carrom-matchmaking-section').classList.remove('active');
+  document.getElementById('carrom-options-section').classList.add('active');
+}
+
+// 2. Matchmaking Lobby search logic
+function searchOnlinePlayers() {
+  const statusBox = document.getElementById('carrom-radar-box');
+  const statusText = document.getElementById('carrom-search-status');
+  const subText = document.getElementById('carrom-search-sub');
+  const playBtn = document.getElementById('carrom-play-btn');
+
+  matchmakingSearchActive = true;
+  playBtn.style.display = 'none'; // Search shuru hone par play button hide ho jaye
+  
+  statusBox.style.background = 'rgba(255, 0, 85, 0.05)';
+  statusBox.style.borderColor = '#ff0055';
+  statusText.style.color = '#ff0055';
+  statusText.textContent = "🔍 SEARCHING FOR PLAYERS...";
+  subText.textContent = "Server active players check kar raha hai, meharbani karke intazar karein...";
+
+  // Simulated matchmaking logic - finding random registered users or defaults
+  setTimeout(() => {
+    if (!matchmakingSearchActive) return;
+
+    // Filter potential online players other than current logged-in user
+    const availablePlayers = usersList.filter(u => u.id !== currentUser.id && u.role !== 'admin');
+    let opponentName = "Gamer Pro";
+    
+    if (availablePlayers.length > 0) {
+      const randomIndex = Math.floor(Math.random() * availablePlayers.length);
+      opponentName = availablePlayers[randomIndex].name;
+    }
+
+    statusText.style.color = '#10b981';
+    statusText.textContent = "🎮 MATCH FOUND!";
+    subText.innerHTML = `Opponent: <strong style="color:#fff;">${opponentName}</strong><br>Match is starting in 3 seconds...`;
+
+    setTimeout(() => {
+      if (!matchmakingSearchActive) return;
+      
+      // Start Real Game
+      isDemoMode = false;
+      document.getElementById('carrom-matchmaking-section').classList.remove('active');
+      document.getElementById('carrom-gameplay-section').classList.add('active');
+      
+      // Safe check lagaya gaya hai
+      let gameModeEl = document.getElementById('carrom-game-mode');
+      if (gameModeEl) gameModeEl.textContent = "REAL ARENA";
+      
+      let scoreP2El = document.getElementById('carrom-score-p2');
+      if (scoreP2El) {
+        scoreP2El.style.display = 'inline';
+        scoreP2El.textContent = `${opponentName}: 0 Pts`;
+      }
+      
+      // Reset search buttons for next time
+      playBtn.style.display = 'block';
+      statusBox.style.background = 'rgba(0, 242, 254, 0.04)';
+      statusBox.style.borderColor = 'rgba(0, 242, 254, 0.25)';
+      statusText.style.color = '#00f2fe';
+      statusText.textContent = "Lobby: Ready to Play";
+      subText.textContent = "Neechay diye gaye Play button par click kar ke online player search karein.";
+      
+      matchmakingSearchActive = false;
+      initCarromEngine();
+    }, 3000);
+
+  }, 4000); // 4 Seconds radar scan
+}
+
+// 3. 2D Interactive Physics Engine for Carrom Board
+// Dynamic Player labels based on Demo/Real Mode
+function initCarromEngine() {
+  carromGameActive = true;
+  p1Score = 0;
+  p2Score = 0;
+  
+  // Set Liyana's Name (User)
+  document.getElementById('carrom-p1-name').textContent = currentUser.name || "Liyana";
+  document.getElementById('carrom-p1-tally').textContent = p1Score;
+
+  let gameModeEl = document.getElementById('carrom-game-mode');
+  let scoreP2El = document.getElementById('carrom-score-p2');
+
+  if (isDemoMode) {
+    // Demo Mode Configuration safely
+    if (gameModeEl) gameModeEl.textContent = "DEMO MODE";
+    if (scoreP2El) scoreP2El.style.display = 'none';
+    
+    document.getElementById('carrom-pot-coins').textContent = "Demo Play";
+    document.getElementById('carrom-p2-name').textContent = "Robot (Demo)";
+    document.getElementById('carrom-p2-avatar').textContent = "🤖";
+    document.getElementById('carrom-p2-frame').style.borderColor = "#00f2fe"; 
+    document.getElementById('carrom-p2-status').style.background = "#3b82f6"; 
+    document.getElementById('carrom-p2-tally').textContent = "0";
+  } else {
+    // Real Mode Configuration safely
+    if (gameModeEl) gameModeEl.textContent = "REAL MATCH";
+    if (scoreP2El) scoreP2El.style.display = 'inline';
+    
+    document.getElementById('carrom-pot-coins').textContent = "1000 Coins";
+    document.getElementById('carrom-p2-avatar').textContent = "👨";
+    document.getElementById('carrom-p2-frame').style.borderColor = "#ff0055"; 
+    document.getElementById('carrom-p2-status').style.background = "#10b981"; 
+    document.getElementById('carrom-p2-tally').textContent = "0";
+  }
+
+  // Re-center Striker Y coordinate (fits 304 width canvas)
+  striker.x = 152;
+  striker.y = 250;
+  striker.vx = 0;
+  striker.vy = 0;
+  striker.isPlaced = true;
+  
+  // Sync HTML range slider
+  document.getElementById('carrom-slider').value = 152;
+  updateHandlePosition(152);
+
+  // Coins Spawn (Center circle structure)
+  coins = [];
+  // Center Queen (Red)
+  coins.push({ x: 152, y: 152, vx: 0, vy: 0, r: 8, mass: 1.0, color: '#b91c1c', scoreVal: 50 }); // Queen
+
+  // Inner rings (Concentric Setup)
+  let angleOffset = Math.PI / 3;
+  for (let i = 0; i < 6; i++) {
+    let angle = i * angleOffset;
+    let cx = 152 + Math.cos(angle) * 19;
+    let cy = 152 + Math.sin(angle) * 19;
+    let coinColor = (i % 2 === 0) ? '#ffffff' : '#222222';
+    let val = (i % 2 === 0) ? 20 : 10;
+    coins.push({ x: cx, y: cy, vx: 0, vy: 0, r: 8, mass: 1.0, color: coinColor, scoreVal: val });
+  }
+
+  // Listeners Setup
+  carromCanvas.addEventListener('mousedown', onAimStart);
+  carromCanvas.addEventListener('mousemove', onAimDrag);
+  window.addEventListener('mouseup', onAimEnd);
+
+  carromCanvas.addEventListener('touchstart', onTouchAimStart, { passive: false });
+  carromCanvas.addEventListener('touchmove', onTouchAimDrag, { passive: false });
+  window.addEventListener('touchend', onTouchAimEnd);
+
+  if (animationFrameId) cancelAnimationFrame(animationFrameId);
+  updateCarromPhysics();
+}
+
+// Slider position aur custom Green Striker handle ko sync rakhnay ka function
+function onStrikerSlide(val) {
+  if (striker.isPlaced) {
+    striker.x = parseInt(val);
+    updateHandlePosition(val);
+  }
+}
+
+function updateHandlePosition(val) {
+  const handle = document.getElementById('slider-striker-handle');
+  if (handle) {
+    // Slide bar key bounds ko control karne ke liye
+    let percent = ((val - 35) / (269 - 35)) * 100;
+    handle.style.left = `calc(${percent}% - 11px)`;
+  }
+}
+
+// 2D Canvas rendering matching the precise design of the user's uploaded screenshot
+function drawCarromBoard() {
+  carromCtx.clearRect(0, 0, 304, 304);
+
+  // 1. Natural Wood Radial Shading (Tasveer ke mutabiq elegant light-peach pattern)
+  let grad = carromCtx.createRadialGradient(152, 152, 10, 152, 152, 150);
+  grad.addColorStop(0, '#f9dfc5');
+  grad.addColorStop(1, '#db9b61');
+  carromCtx.fillStyle = grad;
+  carromCtx.fillRect(0, 0, 304, 304);
+
+  // 2. Corner Golden Guards / Bumpers
+  carromCtx.fillStyle = '#cc9343';
+  carromCtx.beginPath(); carromCtx.arc(15, 15, 15, 0, Math.PI * 2); carromCtx.fill();
+  carromCtx.beginPath(); carromCtx.arc(289, 15, 15, 0, Math.PI * 2); carromCtx.fill();
+  carromCtx.beginPath(); carromCtx.arc(15, 289, 15, 0, Math.PI * 2); carromCtx.fill();
+  carromCtx.beginPath(); carromCtx.arc(289, 289, 15, 0, Math.PI * 2); carromCtx.fill();
+
+  // 3. Baselines Setup (Thin lines with tiny endpoint red circles)
+  carromCtx.strokeStyle = 'rgba(74, 43, 20, 0.45)';
+  carromCtx.lineWidth = 1.2;
+
+  let baselinesY = [54, 250]; // Horizontal guide lines
+  baselinesY.forEach(y => {
+    carromCtx.beginPath();
+    carromCtx.moveTo(40, y);
+    carromCtx.lineTo(264, y);
+    carromCtx.stroke();
+    // Red dot endpoints
+    carromCtx.fillStyle = '#b91c1c';
+    carromCtx.beginPath(); carromCtx.arc(40, y, 3, 0, Math.PI*2); carromCtx.fill();
+    carromCtx.beginPath(); carromCtx.arc(264, y, 3, 0, Math.PI*2); carromCtx.fill();
+  });
+
+  let baselinesX = [40, 264]; // Vertical guide lines
+  baselinesX.forEach(x => {
+    carromCtx.beginPath();
+    carromCtx.moveTo(x, 40);
+    carromCtx.lineTo(x, 264);
+    carromCtx.stroke();
+    // Red dot endpoints
+    carromCtx.fillStyle = '#b91c1c';
+    carromCtx.beginPath(); carromCtx.arc(x, 40, 3, 0, Math.PI*2); carromCtx.fill();
+    carromCtx.beginPath(); carromCtx.arc(x, 264, 3, 0, Math.PI*2); carromCtx.fill();
+  });
+
+  // 4. Center Mandala Pattern & More Dots (Dots ko barhane ke liye multi-circle design)
+  carromCtx.strokeStyle = 'rgba(122, 69, 31, 0.35)';
+  carromCtx.beginPath();
+  carromCtx.arc(152, 152, 45, 0, Math.PI * 2);
+  carromCtx.stroke();
+
+  carromCtx.beginPath();
+  carromCtx.arc(152, 152, 40, 0, Math.PI * 2);
+  carromCtx.stroke();
+
+  // Draw concentric tiny aesthetic dots around the center circle (Increased dots)
+  carromCtx.fillStyle = '#b91c1c';
+  for (let i = 0; i < 24; i++) {
+    let angle = (i * Math.PI) / 12;
+    let dx = 152 + Math.cos(angle) * 42;
+    let dy = 152 + Math.sin(angle) * 42;
+    carromCtx.beginPath();
+    carromCtx.arc(dx, dy, 1.5, 0, Math.PI * 2);
+    carromCtx.fill();
+  }
+
+  // Draw concentric tiny dots along baseline corners (dots increased)
+  carromCtx.fillStyle = 'rgba(74, 43, 20, 0.6)';
+  let dotPositions = [40, 264];
+  dotPositions.forEach(x => {
+    dotPositions.forEach(y => {
+      // Corners pattern with small dots
+      for (let j = 1; j <= 4; j++) {
+        carromCtx.beginPath();
+        carromCtx.arc(x + (x===40?10:-10)*j, y, 1, 0, Math.PI*2);
+        carromCtx.arc(x, y + (y===40?10:-10)*j, 1, 0, Math.PI*2);
+        carromCtx.fill();
+      }
+    });
+  });
+
+  // 5. Draw Corner Pockets (Deep Pure Black Zones)
+  let pocketsMap = [
+    { x: 18, y: 18, r: 16 },
+    { x: 286, y: 18, r: 16 },
+    { x: 18, y: 286, r: 16 },
+    { x: 286, y: 286, r: 16 }
+  ];
+  pocketsMap.forEach(pocket => {
+    carromCtx.fillStyle = '#0a0a0a';
+    carromCtx.beginPath();
+    carromCtx.arc(pocket.x, pocket.y, pocket.r, 0, Math.PI * 2);
+    carromCtx.fill();
+    carromCtx.strokeStyle = '#222';
+    carromCtx.lineWidth = 1;
+    carromCtx.stroke();
+  });
+
+  // 6. Draw Game Coins (Exactly matching Yamin and Liyana's colors)
+  coins.forEach(coin => {
+    carromCtx.fillStyle = coin.color;
+    carromCtx.beginPath();
+    carromCtx.arc(coin.x, coin.y, coin.r, 0, Math.PI * 2);
+    carromCtx.fill();
+    
+    // Coin internal rings layout
+    carromCtx.strokeStyle = coin.color === '#222222' ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)';
+    carromCtx.lineWidth = 1;
+    carromCtx.beginPath();
+    carromCtx.arc(coin.x, coin.y, 4, 0, Math.PI * 2);
+    carromCtx.stroke();
+
+    if (coin.color === '#b91c1c') { // Queen Highlights
+      carromCtx.fillStyle = '#fbbf24'; // Golden core for Queen
+      carromCtx.beginPath(); carromCtx.arc(coin.x, coin.y, 2, 0, Math.PI*2); carromCtx.fill();
+    }
+  });
+
+  // 7. Draw Jade Green Striker (Patterned concentric visual texture)
+  // Matching the striker Y position update
+  carromCtx.fillStyle = 'radial-gradient(circle, #5cc8a5 0%, #177154 100%)';
+  let strikerGrad = carromCtx.createRadialGradient(striker.x, striker.y, 2, striker.x, striker.y, striker.r);
+  strikerGrad.addColorStop(0, '#5cc8a5');
+  strikerGrad.addColorStop(1, '#177154');
+  
+  carromCtx.fillStyle = strikerGrad;
+  carromCtx.beginPath();
+  carromCtx.arc(striker.x, striker.y, striker.r, 0, Math.PI * 2);
+  carromCtx.fill();
+  
+  // Striker outer boundary
+  carromCtx.strokeStyle = '#ffffff';
+  carromCtx.lineWidth = 1.2;
+  carromCtx.beginPath();
+  carromCtx.arc(striker.x, striker.y, striker.r, 0, Math.PI * 2);
+  carromCtx.stroke();
+
+  // Striker inner concentric circles
+  carromCtx.strokeStyle = 'rgba(255,255,255,0.5)';
+  carromCtx.lineWidth = 1;
+  carromCtx.beginPath();
+  carromCtx.arc(striker.x, striker.y, striker.r - 4, 0, Math.PI * 2);
+  carromCtx.stroke();
+  carromCtx.beginPath();
+  carromCtx.arc(striker.x, striker.y, striker.r - 8, 0, Math.PI * 2);
+  carromCtx.stroke();
+}
+
+// 5. Game Over / Quit Logic
+function handleCarromMatchOver() {
+  carromGameActive = false;
+  if (animationFrameId) cancelAnimationFrame(animationFrameId);
+  
+  if (!isDemoMode) {
+    // Reward coins to winner
+    currentUser.coins += 500;
+    currentUser.wins += 1;
+    companyProfit += 100;
+    saveState();
+    
+    showAlert('Victory! Aap match jeet gaye. +500 Coins added to wallet!', 'success');
+  } else {
+    showAlert('Demo match khatam ho gaya! Professional design board check karne ka shukriya.', 'success');
+  }
+  
+  quitCarromGame();
+}
+
+function quitCarromGame() {
+  carromGameActive = false;
+  if (animationFrameId) cancelAnimationFrame(animationFrameId);
+
+  // Remove listeners
+  carromCanvas.removeEventListener('mousedown', onAimStart);
+  carromCanvas.removeEventListener('mousemove', onAimDrag);
+  window.removeEventListener('mouseup', onAimEnd);
+  carromCanvas.removeEventListener('touchstart', onTouchAimStart);
+  carromCanvas.removeEventListener('touchmove', onTouchAimDrag);
+  window.removeEventListener('touchend', onTouchAimEnd);
+
+  document.getElementById('carrom-gameplay-section').classList.remove('active');
+  
+  // Set status online and go home
+  if (currentUser) {
+    currentUser.status = 'Online';
+    saveState();
+  }
+  
+  showHomeScreen(currentUser);
+}
+
+// ===================================================================
+// MISSING CARROM PHYSICS & AIMING FUNCTIONS (INSERT THIS)
+// ===================================================================
+
+function updateCarromPhysics() {
+  if (!carromGameActive) return;
+
+  // Board background draw karein
+  drawCarromBoard();
+
+  let friction = 0.982; // Friction to slow down coins
+  let activeMovement = false;
+
+  // 1. Update Striker Position with friction
+  if (Math.abs(striker.vx) > 0.05 || Math.abs(striker.vy) > 0.05) {
+    striker.x += striker.vx;
+    striker.y += striker.vy;
+    striker.vx *= friction;
+    striker.vy *= friction;
+    activeMovement = true;
+
+    // Boundary Wall Bounces for Striker
+    if (striker.x < 24) { striker.x = 24; striker.vx *= -0.85; }
+    if (striker.x > 280) { striker.x = 280; striker.vx *= -0.85; }
+    if (striker.y < 24) { striker.y = 24; striker.vy *= -0.85; }
+    if (striker.y > 280) { striker.y = 280; striker.vy *= -0.85; }
+  } else {
+    striker.vx = 0;
+    striker.vy = 0;
+  }
+
+  // 2. Update All Coins Positions with friction
+  coins.forEach((coin, idx) => {
+    if (Math.abs(coin.vx) > 0.05 || Math.abs(coin.vy) > 0.05) {
+      coin.x += coin.vx;
+      coin.y += coin.vy;
+      coin.vx *= friction;
+      coin.vy *= friction;
+      activeMovement = true;
+
+      // Boundary Wall Bounces for Coins
+      if (coin.x < 20) { coin.x = 20; coin.vx *= -0.85; }
+      if (coin.x > 284) { coin.x = 284; coin.vx *= -0.85; }
+      if (coin.y < 20) { coin.y = 20; coin.vy *= -0.85; }
+      if (coin.y > 284) { coin.y = 284; coin.vy *= -0.85; }
+    } else {
+      coin.vx = 0;
+      coin.vy = 0;
+    }
+
+    // Checking if Coin gets Pocketed
+    let pocketsMap = [
+      { x: 18, y: 18, r: 16 },
+      { x: 286, y: 18, r: 16 },
+      { x: 18, y: 286, r: 16 },
+      { x: 286, y: 286, r: 16 }
+    ];
+    pocketsMap.forEach(pocket => {
+      let dist = Math.hypot(coin.x - pocket.x, coin.y - pocket.y);
+      if (dist < pocket.r) {
+        // Points Calculation
+        p1Score += coin.scoreVal;
+        document.getElementById('carrom-p1-tally').textContent = p1Score;
+        coins.splice(idx, 1);
+        showAlert(`🎯 Pocketed! +${coin.scoreVal} Points Added.`, 'success');
+        
+        if (coins.length === 0) {
+          handleCarromMatchOver();
+        }
+      }
+    });
+  });
+
+  // 3. Striker Pocket Foul logic
+  let pocketsMap = [
+    { x: 18, y: 18, r: 16 },
+    { x: 286, y: 18, r: 16 },
+    { x: 18, y: 286, r: 16 },
+    { x: 286, y: 286, r: 16 }
+  ];
+  pocketsMap.forEach(pocket => {
+    let dist = Math.hypot(striker.x - pocket.x, striker.y - pocket.y);
+    if (dist < pocket.r) {
+      striker.vx = 0;
+      striker.vy = 0;
+      striker.x = 152;
+      striker.y = 250;
+      striker.isPlaced = true;
+      document.getElementById('carrom-slider').disabled = false;
+      document.getElementById('carrom-slider').value = 152;
+      updateHandlePosition(152);
+      showAlert(`⚠️ Foul! Striker in Pocket.`, 'error');
+    }
+  });
+
+  // 4. Elastic Spherical Collisions
+  coins.forEach(coin => {
+    resolveCollision(striker, coin);
+  });
+  for (let i = 0; i < coins.length; i++) {
+    for (let j = i + 1; j < coins.length; j++) {
+      resolveCollision(coins[i], coins[j]);
+    }
+  }
+
+  // 5. Auto Reset Striker once movement stops
+  if (!activeMovement && !striker.isPlaced && striker.vx === 0 && striker.vy === 0) {
+    setTimeout(() => {
+      if (carromGameActive && !striker.isPlaced) {
+        striker.x = 152;
+        striker.y = 250;
+        striker.vx = 0;
+        striker.vy = 0;
+        striker.isPlaced = true;
+        document.getElementById('carrom-slider').disabled = false;
+        document.getElementById('carrom-slider').value = 152;
+        updateHandlePosition(152);
+      }
+    }, 800);
+  }
+
+  // Draw visual Aiming slingshot guide
+  if (isAiming) {
+    drawAimingGuide();
+  }
+
+  animationFrameId = requestAnimationFrame(updateCarromPhysics);
+}
+
+// 2D Vector Physics collision resolution
+function resolveCollision(c1, c2) {
+  const dx = c2.x - c1.x;
+  const dy = c2.y - c1.y;
+  const distance = Math.hypot(dx, dy);
+
+  if (distance < c1.r + c2.r) {
+    const overlap = (c1.r + c2.r) - distance;
+    const nx = dx / distance;
+    const ny = dy / distance;
+    
+    // Push apart to prevent stuck states
+    c1.x -= nx * overlap * 0.5;
+    c1.y -= ny * overlap * 0.5;
+    c2.x += nx * overlap * 0.5;
+    c2.y += ny * overlap * 0.5;
+
+    // Elastic momentum distribution
+    const kx = c1.vx - c2.vx;
+    const ky = c1.vy - c2.vy;
+    const p = 2 * (nx * kx + ny * ky) / (c1.mass + c2.mass);
+    
+    c1.vx -= p * c2.mass * nx;
+    c1.vy -= p * c2.mass * ny;
+    c2.vx += p * c1.mass * nx;
+    c2.vy += p * c1.mass * ny;
+  }
+}
+
+// Aim and dragging control vectors
+function getMouseCoords(e) {
+  let rect = carromCanvas.getBoundingClientRect();
+  let clientX = e.clientX || (e.touches && e.touches[0].clientX);
+  let clientY = e.clientY || (e.touches && e.touches[0].clientY);
+  return {
+    x: (clientX - rect.left) * (carromCanvas.width / rect.width),
+    y: (clientY - rect.top) * (carromCanvas.height / rect.height)
+  };
+}
+
+function onAimStart(e) {
+  if (!striker.isPlaced) return;
+  let coords = getMouseCoords(e);
+  let dist = Math.hypot(coords.x - striker.x, coords.y - striker.y);
+  
+  if (dist < striker.r + 20) {
+    isAiming = true;
+    aimStart = { x: striker.x, y: striker.y };
+    aimEnd = coords;
+  }
+}
+
+function onAimDrag(e) {
+  if (!isAiming) return;
+  aimEnd = getMouseCoords(e);
+}
+
+function onAimEnd() {
+  if (!isAiming) return;
+  isAiming = false;
+
+  let dx = aimStart.x - aimEnd.x;
+  let dy = aimStart.y - aimEnd.y;
+  
+  // Power Multiplier
+  striker.vx = dx * 0.22;
+  striker.vy = dy * 0.22;
+  striker.isPlaced = false;
+
+  document.getElementById('carrom-slider').disabled = true;
+}
+
+// Mobile touch input handlers
+function onTouchAimStart(e) {
+  e.preventDefault();
+  onAimStart(e);
+}
+function onTouchAimDrag(e) {
+  e.preventDefault();
+  onAimDrag(e);
+}
+function onTouchAimEnd() {
+  onAimEnd();
+}
+
+// Draw visual targeting arrow
+function drawAimingGuide() {
+  let dx = aimStart.x - aimEnd.x;
+  let dy = aimStart.y - aimEnd.y;
+
+  carromCtx.strokeStyle = '#00f2fe';
+  carromCtx.lineWidth = 2.5;
+  carromCtx.beginPath();
+  carromCtx.moveTo(striker.x, striker.y);
+  carromCtx.lineTo(striker.x + dx, striker.y + dy);
+  carromCtx.stroke();
+
+  // Indicator tip circle
+  carromCtx.fillStyle = '#00f2fe';
+  carromCtx.beginPath();
+  carromCtx.arc(striker.x + dx, striker.y + dy, 4, 0, Math.PI * 2);
+  carromCtx.fill();
 }
 
   </script>
